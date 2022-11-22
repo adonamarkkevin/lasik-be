@@ -3,12 +3,12 @@ import { hash } from "bcrypt";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-export const createUser = async (user: any) => {
+export const createUser = async (user: any, clinic?: any) => {
     const userInfo = new UserInfo();
     userInfo.user_name = user.user_name;
     userInfo.password =
         user.password !== null || undefined
-            ? await hash(user.password, 10)
+            ? await hash(user.password, parseInt(process.env.SALT_ROUNDS))
             : null;
     userInfo.role = user.role;
     userInfo.firstName = user.firstName;
@@ -20,13 +20,14 @@ export const createUser = async (user: any) => {
     userInfo.birthday = user.birthday;
     userInfo.address = user.address;
     userInfo.contact = user.contact;
+    userInfo.clinic = clinic;
 
     await UserInfo.save(userInfo);
 
     return userInfo;
 };
 
-export const updateUser = async (userInfo: any, user: any) => {
+export const updateUser = async (userInfo: any, user: any, clinic?: any) => {
     userInfo.user_name = user.user_name;
     userInfo.password =
         user.password !== null || undefined
@@ -42,36 +43,31 @@ export const updateUser = async (userInfo: any, user: any) => {
     userInfo.birthday = user.birthday;
     userInfo.address = user.address;
     userInfo.contact = user.contact;
+    userInfo.clinic = clinic;
 
     await UserInfo.save(userInfo);
 
     return userInfo;
 };
 
-export const getUserById = async (id: number) => {
+export const getUserById = async (id: number, relation?: any) => {
     const userFound = await UserInfo.findOne({
         where: { id: id },
-        select: ["password"],
+        relations: relation,
     });
 
-    return userFound;
-};
-
-export const getUserByEmail = async (email: string) => {
-    const userFound = await UserInfo.findOne({
-        where: { email: email },
-    });
     return userFound;
 };
 
 export const deleteUser = async (userInfo: any) => {
     await UserInfo.softRemove(userInfo);
+    return;
 };
 
 export const getUserByKey = async (key: any, value: any) => {
-    const userFound = await UserInfo.findOne({
-        where: { [key]: value },
-        select: ["password"],
-    });
+    const userFound = await UserInfo.createQueryBuilder("user")
+        .addSelect("user.password")
+        .where({ [key]: value })
+        .getOne();
     return userFound;
 };

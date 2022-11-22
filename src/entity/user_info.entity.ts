@@ -6,7 +6,10 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    ManyToOne,
+    JoinColumn,
 } from "typeorm";
+import { Clinic } from "./clinic_branch.entity";
 
 @Entity({ name: "user_info" })
 export class UserInfo extends BaseEntity {
@@ -49,6 +52,33 @@ export class UserInfo extends BaseEntity {
     @Column({ nullable: true })
     contact: string;
 
+    @Column({ nullable: true })
+    license_number: string;
+
+    @Column({ nullable: true })
+    licence_start: string;
+
+    @Column({ nullable: true })
+    license_expires_in: string;
+
+    @Column({ nullable: true })
+    ptr_no: string;
+
+    @Column({ nullable: true })
+    ptr_eff_date: string;
+
+    @Column({ nullable: true })
+    ptr_exp_date: string;
+
+    @Column({ nullable: true })
+    s2_no: string;
+
+    @Column({ nullable: true })
+    s2_eff_date: string;
+
+    @Column({ nullable: true })
+    s2_exp_date: string;
+
     @CreateDateColumn()
     created_at: Date;
 
@@ -57,4 +87,8 @@ export class UserInfo extends BaseEntity {
 
     @DeleteDateColumn()
     deletd_at: Date;
+
+    @ManyToOne(() => Clinic, (clinic) => clinic.user)
+    @JoinColumn({ name: "clinicId" })
+    clinic: Clinic;
 }

@@ -1,6 +1,11 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
+import { UserInfo } from "./entity/user_info.entity";
+import { Clinic } from "./entity/clinic_branch.entity";
+import { Department } from "./entity/department.entity";
+import { Service } from "./entity/services.entity";
+import { Packcage } from "./entity/packages.entity";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -12,7 +17,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: true,
-    // entities: [User],
+    entities: [UserInfo, Clinic, Department, Service, Packcage],
     // migrations: [],
     // subscribers: [],
 });

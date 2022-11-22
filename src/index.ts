@@ -3,6 +3,7 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 dotenv.config();
 import express from "express";
+import { authRoutes } from "./route/auth.routes";
 
 declare module "express" {
     export interface Request {
@@ -25,6 +26,9 @@ AppDataSource.initialize()
         };
         app.use(express.json());
         app.use(cors(corsOpts));
+
+        //Routes
+        app.use("/api/v1", authRoutes);
 
         const PORT = process.env.PORT || 3006;
         // run app

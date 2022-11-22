@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import {
     createUser,
-    getUserByEmail,
     getUserById,
     getUserByKey,
 } from "../service/user_info.service";
@@ -12,7 +11,15 @@ import { generateToken } from "../middleware/auth.middleware";
 export const registerUser = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body;
+        const userFound = await getUserByKey("user_name", reqBody.user_name);
+        if (userFound) {
+            return res.status(403).send({
+                status: "Bad Request",
+                message: "Username exist.",
+            });
+        }
         await createUser(reqBody);
+
         return res.send({
             status: "Success",
             message: "Register Successful",
@@ -30,9 +37,9 @@ export const loginUser = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body;
 
-        const userFound = EmailValidator.validate(reqBody.email)
-            ? await getUserByEmail(reqBody.email)
-            : await getUserByKey(reqBody.user_name, reqBody.user_name);
+        const userFound = EmailValidator.validate(reqBody.user_access)
+            ? await getUserByKey("email", reqBody.user_access)
+            : await getUserByKey("user_name", reqBody.user_access);
 
         compare(reqBody.password, userFound.password, (err, data) => {
             if (err) {
@@ -46,21 +53,31 @@ export const loginUser = async (req: Request, res: Response) => {
                 const authUser = generateToken(userFound);
                 return res.send({
                     status: "Success",
-                    message: "Login Successfuly",
+                    message: "Login Successfull",
                     token: authUser,
-                });
-            } else {
-                return res.status(401).send({
-                    status: "Bad Request",
-                    message: "Invalid Credentials",
                 });
             }
         });
-    } catch (error) {
-        return res.status(500).send({
+    } catch (err) {
+        return res.status(401).send({
+            status: "Bad Request",
+            message: "Invalid Credentials",
+            error: err.message,
+        });
+    }
+};
+
+export const getCurrentUser = async (req: Request, res: Response) => {
+    try {
+        const currentUser = req.user;
+        const userFound = await getUserById(parseInt(currentUser.id));
+
+        return res.send(userFound);
+    } catch (err) {
+        return res.status(401).send({
             status: `Server Error`,
             message: `Please contact administrator`,
-            error: error.message,
+            error: err.message,
         });
     }
 };
