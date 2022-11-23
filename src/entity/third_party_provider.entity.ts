@@ -8,8 +8,10 @@ import {
     DeleteDateColumn,
     ManyToOne,
     JoinColumn,
+    OneToMany,
 } from "typeorm";
 import { PatientClass } from "./patient_class.entity";
+import { PatientVisit } from "./patient_visit.entity";
 
 @Entity({ name: "third_party_provider" })
 export class ThirdParty extends BaseEntity {
@@ -61,4 +63,7 @@ export class ThirdParty extends BaseEntity {
     @ManyToOne(() => PatientClass, (pClass) => pClass.tpp)
     @JoinColumn({ name: "patient_class_id" })
     patient_class: PatientClass;
+
+    @OneToMany(() => PatientVisit, (visit) => visit.third_party_provider)
+    patient_visit: PatientVisit[];
 }

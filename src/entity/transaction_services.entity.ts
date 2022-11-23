@@ -7,7 +7,6 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
     ManyToOne,
-    ManyToMany,
     JoinColumn,
 } from "typeorm";
 import { UserInfo } from "./user_info.entity";

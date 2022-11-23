@@ -54,6 +54,7 @@ export const addRelateService = async (
         .relation("service")
         .of(packageFound)
         .add(serviceFound);
+    return;
 };
 
 export const removeRelateService = async (
@@ -64,4 +65,5 @@ export const removeRelateService = async (
         .relation("service")
         .of(packageFound)
         .remove(serviceFound);
+    return;
 };

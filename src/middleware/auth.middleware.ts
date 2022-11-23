@@ -12,7 +12,7 @@ export const generateToken = (data: any) => {
         role: data.role,
     };
 
-    return jwt.sign(payload, config.ACCESS_TOKEN_SECRET);
+    return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: "8h" });
 };
 
 export const checkToken = (req: Request, res: Response, next: NextFunction) => {

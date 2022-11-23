@@ -8,6 +8,7 @@ import {
     PrimaryGeneratedColumn,
     OneToMany,
 } from "typeorm";
+import { PatientVisit } from "./patient_visit.entity";
 import { UserInfo } from "./user_info.entity";
 
 @Entity({ name: "clinic" })
@@ -53,4 +54,7 @@ export class Clinic extends BaseEntity {
 
     @OneToMany(() => UserInfo, (user) => user.clinic)
     user: UserInfo[];
+
+    @OneToMany(() => PatientVisit, (visit) => visit.clinic)
+    patient_visit: PatientVisit[];
 }
