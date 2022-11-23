@@ -2,18 +2,14 @@ import {
     BaseEntity,
     Column,
     Entity,
-    JoinTable,
-    ManyToMany,
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
 } from "typeorm";
 
-import { Service } from "./services.entity";
-
-@Entity({ name: "packages" })
-export class Packcage extends BaseEntity {
+@Entity({ name: "transaction_packcages" })
+export class TransactionPackage extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -43,8 +39,4 @@ export class Packcage extends BaseEntity {
 
     @DeleteDateColumn()
     deletedAt: Date;
-
-    @ManyToMany(() => Service, (service) => service.package)
-    @JoinTable({ name: "services_packcages" })
-    service: Service[];
 }

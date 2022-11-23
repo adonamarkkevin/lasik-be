@@ -8,8 +8,10 @@ import {
     DeleteDateColumn,
     ManyToOne,
     JoinColumn,
+    OneToMany,
 } from "typeorm";
 import { Clinic } from "./clinic_branch.entity";
+import { TransactionService } from "./transaction_services.entity";
 
 @Entity({ name: "user_info" })
 export class UserInfo extends BaseEntity {
@@ -91,4 +93,10 @@ export class UserInfo extends BaseEntity {
     @ManyToOne(() => Clinic, (clinic) => clinic.user)
     @JoinColumn({ name: "clinicId" })
     clinic: Clinic;
+
+    @OneToMany(
+        () => TransactionService,
+        (assignedService) => assignedService.assigned_doctor,
+    )
+    assigned_service: TransactionService[];
 }

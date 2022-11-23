@@ -6,6 +6,9 @@ import { Clinic } from "./entity/clinic_branch.entity";
 import { Department } from "./entity/department.entity";
 import { Service } from "./entity/services.entity";
 import { Packcage } from "./entity/packages.entity";
+import { ThirdParty } from "./entity/third_party_provider.entity";
+import { TransactionPackage } from "./entity/transaction_packages.entity";
+import { TransactionService } from "./entity/transaction_services.entity";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -17,7 +20,16 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: true,
-    entities: [UserInfo, Clinic, Department, Service, Packcage],
+    entities: [
+        UserInfo,
+        Clinic,
+        Department,
+        Service,
+        Packcage,
+        ThirdParty,
+        TransactionPackage,
+        TransactionService,
+    ],
     // migrations: [],
     // subscribers: [],
 });

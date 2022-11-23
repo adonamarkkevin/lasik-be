@@ -9,10 +9,11 @@ import {
     DeleteDateColumn,
     ManyToOne,
     ManyToMany,
+    JoinColumn,
 } from "typeorm";
-import { Packcage } from "./packages.entity";
-@Entity({ name: "services" })
-export class Service extends BaseEntity {
+import { UserInfo } from "./user_info.entity";
+@Entity({ name: "transaction_services" })
+export class TransactionService extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -37,6 +38,10 @@ export class Service extends BaseEntity {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @ManyToMany(() => Packcage, (pack) => pack.service)
-    package: Packcage[];
+    @ManyToOne(
+        () => UserInfo,
+        (assignedDoctor) => assignedDoctor.assigned_service,
+    )
+    @JoinColumn({ name: "doctor_id" })
+    assigned_doctor: UserInfo;
 }
