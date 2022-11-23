@@ -2,12 +2,10 @@ import {
     BaseEntity,
     Column,
     Entity,
-    OneToMany,
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
-    ManyToOne,
     ManyToMany,
 } from "typeorm";
 import { Packcage } from "./packages.entity";

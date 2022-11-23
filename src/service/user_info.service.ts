@@ -71,3 +71,18 @@ export const getUserByKey = async (key: any, value: any) => {
         .getOne();
     return userFound;
 };
+
+export const assignClinic = async (userId: number, clinicId: number) => {
+    if (clinicId === 0) {
+        await UserInfo.createQueryBuilder()
+            .relation("clinic")
+            .of(userId)
+            .set(null);
+        return;
+    }
+    await UserInfo.createQueryBuilder()
+        .relation("clinic")
+        .of(userId)
+        .set(clinicId);
+    return;
+};

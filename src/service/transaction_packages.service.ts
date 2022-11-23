@@ -1,0 +1,54 @@
+import { TransactionPackage } from "../entity/transaction_packages.entity";
+
+export const createTransactionPackage = async (packBody: any) => {
+    const newPackage = new TransactionPackage();
+    newPackage.code = packBody.code;
+    newPackage.name = packBody.name;
+    newPackage.price = packBody.price;
+    newPackage.facility_fee = packBody.facility_fee;
+    newPackage.doctor_share = packBody.doctor_share;
+    newPackage.professional_share = packBody.professional_share;
+
+    await TransactionPackage.save(newPackage);
+    return newPackage;
+};
+
+export const updateTransactionPackage = async (
+    packageFound: any,
+    packBody: any,
+) => {
+    packageFound.code = packBody.code;
+    packageFound.name = packBody.name;
+    packageFound.price = packBody.price;
+    packageFound.facility_fee = packBody.facility_fee;
+    packageFound.doctor_share = packBody.doctor_share;
+    packageFound.professional_share = packBody.professional_share;
+
+    await TransactionPackage.save(packageFound);
+    return packageFound;
+};
+
+export const deleteTransactionPackage = async (packageFound: any) => {
+    await TransactionPackage.softRemove(packageFound);
+    return;
+};
+
+export const getTransactionPackageById = async (id: number, relation?: any) => {
+    const packageFound = await TransactionPackage.findOne({
+        where: { id: id },
+        relations: relation,
+    });
+    return packageFound;
+};
+
+export const getTransactionPackageByKey = async (
+    key: any,
+    value: any,
+    relation?: any,
+) => {
+    const packageFound = await TransactionPackage.findOne({
+        where: { [key]: value },
+        relations: relation,
+    });
+    return packageFound;
+};

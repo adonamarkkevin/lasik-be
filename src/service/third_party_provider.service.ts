@@ -59,3 +59,23 @@ export const getTppByKey = async (key: any, value: any, relation?: any) => {
 
     return tppFound;
 };
+
+export const relatePatienClass = async (
+    tppFoundId: number,
+    patientClassId: number,
+) => {
+    if (patientClassId === 0) {
+        await ThirdParty.createQueryBuilder()
+            .relation("patient_class")
+            .of(tppFoundId)
+            .set(null);
+
+        return;
+    }
+    await ThirdParty.createQueryBuilder()
+        .relation("patient_class")
+        .of(tppFoundId)
+        .set(patientClassId);
+
+    return;
+};

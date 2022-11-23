@@ -43,13 +43,13 @@ export class Clinic extends BaseEntity {
     email: string;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updated_at: Date;
 
     @DeleteDateColumn()
-    deletedAt: Date;
+    deleted_at: Date;
 
     @OneToMany(() => UserInfo, (user) => user.clinic)
     user: UserInfo[];

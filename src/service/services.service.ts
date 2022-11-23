@@ -5,6 +5,7 @@ export const createService = async (service: any) => {
     newService.name = service.name;
     newService.code = service.code;
     newService.price = service.price;
+    newService.doctor_share = service.doctor_share;
 
     await Service.save(newService);
     return newService;
@@ -14,6 +15,7 @@ export const updateService = async (serviceFound: any, service: any) => {
     serviceFound.name = service.name;
     serviceFound.code = service.code;
     serviceFound.price = service.price;
+    serviceFound.doctor_share = service.doctor_share;
 
     await Service.save(serviceFound);
     return serviceFound;
@@ -40,7 +42,7 @@ export const getServiceByKey = async (key: any, value: any, relation?: any) => {
     return serviceFound;
 };
 
-export const servicePackageRelation = async (
+export const addRelatePackage = async (
     serviceFound: any,
     packageFound: any,
 ) => {
@@ -48,5 +50,16 @@ export const servicePackageRelation = async (
         .relation("package")
         .of(serviceFound)
         .add(packageFound);
+    return;
+};
+
+export const removeRelatePackage = async (
+    serviceFound: any,
+    packageFound: any,
+) => {
+    await Service.createQueryBuilder()
+        .relation("package")
+        .of(serviceFound)
+        .remove(packageFound);
     return;
 };

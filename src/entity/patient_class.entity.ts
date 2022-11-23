@@ -1,18 +1,17 @@
 import {
     BaseEntity,
-    Entity,
+    Column,
     CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
     UpdateDateColumn,
     DeleteDateColumn,
-    PrimaryGeneratedColumn,
-    Column,
     OneToMany,
-    JoinColumn,
 } from "typeorm";
-import { UserInfo } from "./user_info.entity";
+import { ThirdParty } from "./third_party_provider.entity";
 
-@Entity({ name: "deparment_info" })
-export class Department extends BaseEntity {
+@Entity({ name: "patient_classes" })
+export class PatientClass extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -20,10 +19,7 @@ export class Department extends BaseEntity {
     code: string;
 
     @Column()
-    department: string;
-
-    @Column({ nullable: true })
-    room_no: string;
+    name: string;
 
     @CreateDateColumn()
     created_at: Date;
@@ -34,6 +30,6 @@ export class Department extends BaseEntity {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @OneToMany(() => UserInfo, (user) => user.deparment)
-    user: UserInfo[];
+    @OneToMany(() => ThirdParty, (tpp) => tpp.patient_class)
+    tpp: ThirdParty[];
 }

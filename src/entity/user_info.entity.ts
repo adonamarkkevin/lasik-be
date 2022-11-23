@@ -11,6 +11,7 @@ import {
     OneToMany,
 } from "typeorm";
 import { Clinic } from "./clinic_branch.entity";
+import { Department } from "./department.entity";
 import { TransactionService } from "./transaction_services.entity";
 
 @Entity({ name: "user_info" })
@@ -88,11 +89,15 @@ export class UserInfo extends BaseEntity {
     updated_at: Date;
 
     @DeleteDateColumn()
-    deletd_at: Date;
+    deleted_at: Date;
 
     @ManyToOne(() => Clinic, (clinic) => clinic.user)
-    @JoinColumn({ name: "clinicId" })
+    @JoinColumn({ name: "clinic_id" })
     clinic: Clinic;
+
+    @ManyToOne(() => Department, (dep) => dep.user)
+    @JoinColumn({ name: "dep_id" })
+    deparment: Department;
 
     @OneToMany(
         () => TransactionService,

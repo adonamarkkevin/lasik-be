@@ -6,10 +6,10 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
-    OneToMany,
     ManyToOne,
     JoinColumn,
 } from "typeorm";
+import { PatientClass } from "./patient_class.entity";
 
 @Entity({ name: "third_party_provider" })
 export class ThirdParty extends BaseEntity {
@@ -50,11 +50,15 @@ export class ThirdParty extends BaseEntity {
     contract_exp: string;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updated_at: Date;
 
     @DeleteDateColumn()
-    deletedAt: Date;
+    deleted_at: Date;
+
+    @ManyToOne(() => PatientClass, (pClass) => pClass.tpp)
+    @JoinColumn({ name: "patient_class_id" })
+    patient_class: PatientClass;
 }
