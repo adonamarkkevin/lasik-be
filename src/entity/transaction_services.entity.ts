@@ -8,7 +8,10 @@ import {
     DeleteDateColumn,
     ManyToOne,
     JoinColumn,
+    ManyToMany,
 } from "typeorm";
+import { TransactionInfo } from "./transaction_info.entity";
+import { TransactionPackage } from "./transaction_packages.entity";
 import { UserInfo } from "./user_info.entity";
 @Entity({ name: "transaction_services" })
 export class TransactionService extends BaseEntity {
@@ -25,7 +28,19 @@ export class TransactionService extends BaseEntity {
     price: number;
 
     @Column({ type: "bigint", nullable: true })
+    discount_amount: number;
+
+    @Column({ type: "bigint", nullable: true })
+    facility_fee: number;
+
+    @Column({ type: "bigint", nullable: true })
     doctor_share: number;
+
+    @Column({ type: "bigint", nullable: true })
+    professional_share: number;
+
+    @Column({ type: "bigint", nullable: true })
+    amount_paid: number;
 
     @CreateDateColumn()
     created_at: Date;
@@ -42,4 +57,16 @@ export class TransactionService extends BaseEntity {
     )
     @JoinColumn({ name: "doctor_id" })
     assigned_doctor: UserInfo;
+
+    @ManyToMany(
+        () => TransactionInfo,
+        (transInfo) => transInfo.transaction_service,
+    )
+    transaction_info: TransactionInfo[];
+
+    @ManyToMany(
+        () => TransactionPackage,
+        (transPckg) => transPckg.transaction_service,
+    )
+    transaction_package: TransactionPackage[];
 }

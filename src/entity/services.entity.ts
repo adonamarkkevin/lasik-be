@@ -40,5 +40,5 @@ export class Service extends BaseEntity {
     package: Packcage[];
 
     @ManyToMany(() => PatientVisit, (visit) => visit.service)
-    patient_visit;
+    patient_visit: PatientVisit[];
 }

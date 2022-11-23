@@ -10,6 +10,8 @@ import { ThirdParty } from "./entity/third_party_provider.entity";
 import { TransactionPackage } from "./entity/transaction_packages.entity";
 import { TransactionService } from "./entity/transaction_services.entity";
 import { PatientClass } from "./entity/patient_class.entity";
+import { TransactionInfo } from "./entity/transaction_info.entity";
+import { PatientVisit } from "./entity/patient_visit.entity";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -28,9 +30,11 @@ export const AppDataSource = new DataSource({
         Service,
         Packcage,
         ThirdParty,
+        TransactionInfo,
         TransactionPackage,
         TransactionService,
         PatientClass,
+        PatientVisit,
     ],
     // migrations: [],
     // subscribers: [],

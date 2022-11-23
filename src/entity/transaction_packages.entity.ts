@@ -6,7 +6,11 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    ManyToMany,
+    JoinTable,
 } from "typeorm";
+import { TransactionInfo } from "./transaction_info.entity";
+import { TransactionService } from "./transaction_services.entity";
 
 @Entity({ name: "transaction_packcages" })
 export class TransactionPackage extends BaseEntity {
@@ -23,6 +27,9 @@ export class TransactionPackage extends BaseEntity {
     price: number;
 
     @Column({ type: "bigint", nullable: true })
+    discount_amount: number;
+
+    @Column({ type: "bigint", nullable: true })
     facility_fee: number;
 
     @Column({ type: "bigint", nullable: true })
@@ -30,6 +37,9 @@ export class TransactionPackage extends BaseEntity {
 
     @Column({ type: "bigint", nullable: true })
     professional_share: number;
+
+    @Column({ type: "bigint", nullable: true })
+    amount_paid: number;
 
     @CreateDateColumn()
     created_at: Date;
@@ -39,4 +49,17 @@ export class TransactionPackage extends BaseEntity {
 
     @DeleteDateColumn()
     deleted_at: Date;
+
+    @ManyToMany(
+        () => TransactionInfo,
+        (transPack) => transPack.transaction_package,
+    )
+    transaction_info: TransactionInfo[];
+
+    @ManyToMany(
+        () => TransactionService,
+        (transService) => transService.transaction_package,
+    )
+    @JoinTable({ name: "jointbl_transactionpckg_transactionsrvc" })
+    transaction_service: TransactionService[];
 }

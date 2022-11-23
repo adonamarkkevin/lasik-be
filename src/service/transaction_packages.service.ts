@@ -8,6 +8,7 @@ export const createTransactionPackage = async (packBody: any) => {
     newPackage.facility_fee = packBody.facility_fee;
     newPackage.doctor_share = packBody.doctor_share;
     newPackage.professional_share = packBody.professional_share;
+    newPackage.amount_paid = packBody.amount_paid;
 
     await TransactionPackage.save(newPackage);
     return newPackage;
@@ -23,6 +24,7 @@ export const updateTransactionPackage = async (
     packageFound.facility_fee = packBody.facility_fee;
     packageFound.doctor_share = packBody.doctor_share;
     packageFound.professional_share = packBody.professional_share;
+    packageFound.amount_paid = packBody.amount_paid;
 
     await TransactionPackage.save(packageFound);
     return packageFound;
@@ -51,4 +53,26 @@ export const getTransactionPackageByKey = async (
         relations: relation,
     });
     return packageFound;
+};
+
+export const addSrvcTransRelation = async (
+    transPckgFound: any,
+    transSrvcFound: any,
+) => {
+    await TransactionPackage.createQueryBuilder()
+        .relation("transaction_service")
+        .of(transPckgFound)
+        .add(transSrvcFound);
+    return;
+};
+
+export const removeSrvcTransRelation = async (
+    transPckgFound: any,
+    transSrvcFound: any,
+) => {
+    await TransactionPackage.createQueryBuilder()
+        .relation("transaction_service")
+        .of(transPckgFound)
+        .remove(transSrvcFound);
+    return;
 };

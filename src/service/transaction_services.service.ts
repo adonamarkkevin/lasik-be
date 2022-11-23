@@ -6,6 +6,8 @@ export const createTransactionService = async (service: any) => {
     newService.code = service.code;
     newService.price = service.price;
     newService.doctor_share = service.doctor_share;
+    newService.professional_share = service.professional_share;
+    newService.amount_paid = service.amount_paid;
 
     await TransactionService.save(newService);
     return newService;
@@ -61,5 +63,27 @@ export const assignDoctor = async (serviceId: number, doctorId: number) => {
         .relation("assigned_doctor")
         .of(serviceId)
         .set(doctorId);
+    return;
+};
+
+export const addPckgTransRelation = async (
+    transSrvcFound: any,
+    transPckgFound: any,
+) => {
+    await TransactionService.createQueryBuilder()
+        .relation("transaction_package")
+        .of(transSrvcFound)
+        .add(transPckgFound);
+    return;
+};
+
+export const removePckgTransRelation = async (
+    transSrvcFound: any,
+    transPckgFound: any,
+) => {
+    await TransactionService.createQueryBuilder()
+        .relation("transaction_package")
+        .of(transSrvcFound)
+        .remove(transPckgFound);
     return;
 };
