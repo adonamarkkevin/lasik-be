@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import { authRoutes } from "./route/auth.routes";
+import { clinicRoutes } from "./route/clinic.routes";
 
 declare module "express" {
     export interface Request {
@@ -28,7 +29,8 @@ AppDataSource.initialize()
         app.use(cors(corsOpts));
 
         //Routes
-        app.use("/api/v1", authRoutes);
+        app.use("/api/v1", authRoutes); // auth routes
+        app.use("/api/v1", clinicRoutes); // clinic routes
 
         const PORT = process.env.PORT || 3006;
         // run app

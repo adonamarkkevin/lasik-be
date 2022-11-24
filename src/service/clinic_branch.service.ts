@@ -45,7 +45,7 @@ export const deleteClinic = async (clinicFound: any) => {
     return;
 };
 
-export const getClinicByKey = async (key: any, value: any, relation: any) => {
+export const getClinicByKey = async (key: any, value: any, relation?: any) => {
     const clinicFound = await Clinic.findOne({
         where: { [key]: value },
         relations: relation,
