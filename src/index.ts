@@ -8,6 +8,7 @@ import { clinicRoutes } from "./route/clinic.routes";
 import { deptRoutes } from "./route/deparment.routes";
 import { srvcRoutes } from "./route/services.routes";
 import { pckgRoutes } from "./route/packages.routes";
+import { tppRoutes } from "./route/third_party_provider.routes";
 
 declare module "express" {
     export interface Request {
@@ -37,6 +38,7 @@ AppDataSource.initialize()
         app.use("/api/v1", deptRoutes); // department routes
         app.use("/api/v1", srvcRoutes); // service routes
         app.use("/api/v1", pckgRoutes); // package routes
+        app.use("/api/v1", tppRoutes); // third party provider routes
 
         const PORT = process.env.PORT || 3006;
         // run app

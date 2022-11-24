@@ -31,6 +31,7 @@ export const updateTpp = async (tppFound: any, tppBody: any) => {
     tppFound.contact_person2 = tppBody.contact_person2;
     tppFound.contract_date = tppBody.contract_date;
     tppFound.contract_exp = tppBody.contract_exp;
+    tppFound.patient_class = tppBody.patient_class;
 
     await ThirdParty.save(tppFound);
 

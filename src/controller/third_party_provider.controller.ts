@@ -1,35 +1,33 @@
 import { Request, Response } from "express";
-import { Service } from "../entity/services.entity";
+import { ThirdParty } from "../entity/third_party_provider.entity";
 import {
-    createService,
-    deleteService,
-    getServiceById,
-    getServiceByKey,
-    relateToBranch,
-    updateService,
-} from "../service/services.service";
+    createTpp,
+    deleteTpp,
+    getTppById,
+    getTppByKey,
+    updateTpp,
+} from "../service/third_party_provider.service";
 
-export const insertSrvc = async (req: Request, res: Response) => {
+export const insertTpp = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body;
-        const srvcFound = await getServiceByKey("code", reqBody.code);
+        const tppFound = await getTppByKey(
+            "third_party_code",
+            reqBody.third_party_code,
+        );
 
-        if (srvcFound) {
+        if (tppFound) {
             return res.status(403).send({
                 status: "Bad Request",
-                message: "Service code exist.",
+                message: "Third party code exist.",
             });
         }
 
-        if (reqBody.deparmentId == undefined || null) {
-        }
-
-        const createdSrvc = await createService(reqBody);
-        await relateToBranch(createdSrvc.id, reqBody.deparmentId);
+        await createTpp(reqBody);
 
         return res.send({
             status: "Success",
-            message: "Service Register Successful",
+            message: "Third Party Provider Register Successful",
         });
     } catch (error) {
         return res.status(500).send({
@@ -40,26 +38,26 @@ export const insertSrvc = async (req: Request, res: Response) => {
     }
 };
 
-export const updateSrvc = async (req: Request, res: Response) => {
+export const upsertTpp = async (req: Request, res: Response) => {
     try {
-        const { srvcId } = req.params;
+        const { tppId } = req.params;
         const reqBody = req.body;
 
-        const srvcFound = await getServiceById(parseInt(srvcId));
+        const tppFound = await getTppById(parseInt(tppId));
 
-        if (!srvcFound) {
+        if (!tppFound) {
             return res.status(404).send({
                 status: "Not Found",
-                message: "Service does not exist.",
+                message: "Third Party Provider does not exist.",
             });
         }
 
-        const updateSrvc = await updateService(srvcFound, reqBody);
+        const updatedTpp = await updateTpp(tppFound, reqBody);
 
         return res.send({
             status: "Success",
-            message: "Service Update Successful",
-            data: updateSrvc,
+            message: "Third Party Provider Update Successful",
+            data: updatedTpp,
         });
     } catch (error) {
         return res.status(500).send({
@@ -70,24 +68,23 @@ export const updateSrvc = async (req: Request, res: Response) => {
     }
 };
 
-export const removeSrvc = async (req: Request, res: Response) => {
+export const removeTpp = async (req: Request, res: Response) => {
     try {
-        const { srvcId } = req.params;
+        const { tppId } = req.params;
+        const tppFound = await getTppById(parseInt(tppId));
 
-        const srvcFound = await getServiceById(parseInt(srvcId));
-
-        if (!srvcFound) {
+        if (!tppFound) {
             return res.status(404).send({
                 status: "Not Found",
-                message: "Service does not exist.",
+                message: "Third Party Provider does not exist.",
             });
         }
 
-        await deleteService(srvcFound);
+        await deleteTpp(tppFound);
 
         return res.send({
             status: "Success",
-            message: "Service Remove Successful",
+            message: "Third Party Provider Remove Successful",
         });
     } catch (error) {
         return res.status(500).send({
@@ -98,20 +95,19 @@ export const removeSrvc = async (req: Request, res: Response) => {
     }
 };
 
-export const getOneSrvc = async (req: Request, res: Response) => {
+export const getOneTpp = async (req: Request, res: Response) => {
     try {
-        const { srvcId } = req.params;
+        const { tppId } = req.params;
+        const tppFound = await getTppById(parseInt(tppId));
 
-        const srvcFound = await getServiceById(parseInt(srvcId));
-
-        if (!srvcFound) {
+        if (!tppFound) {
             return res.status(404).send({
                 status: "Not Found",
-                message: "Service does not exist.",
+                message: "Third Party Provider does not exist.",
             });
         }
 
-        return res.send(srvcFound);
+        return res.send(tppFound);
     } catch (error) {
         return res.status(500).send({
             status: `Server Error`,
@@ -121,12 +117,12 @@ export const getOneSrvc = async (req: Request, res: Response) => {
     }
 };
 
-export const viewAllSrvc = async (req: Request, res: Response) => {
+export const viewAllTpp = async (req: Request, res: Response) => {
     try {
-        const [allSrvc, count] = await Service.find();
+        const [allTpp, count] = await ThirdParty.findAndCount();
 
         return res.send({
-            data: allSrvc,
+            data: allTpp,
             count: count,
         });
     } catch (error) {
