@@ -21,7 +21,11 @@ export const insertSrvc = async (req: Request, res: Response) => {
             });
         }
 
-        if (reqBody.deparmentId == undefined || null) {
+        if (reqBody.deparmentId == undefined || null || "") {
+            return res.status(403).send({
+                status: "Bad Request",
+                message: "Department ID is required",
+            });
         }
 
         const createdSrvc = await createService(reqBody);
