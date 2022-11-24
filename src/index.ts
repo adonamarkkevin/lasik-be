@@ -6,6 +6,7 @@ import express from "express";
 import { authRoutes } from "./route/auth.routes";
 import { clinicRoutes } from "./route/clinic.routes";
 import { deptRoutes } from "./route/deparment.routes";
+import { srvcRoutes } from "./route/services.routes";
 
 declare module "express" {
     export interface Request {
@@ -33,6 +34,7 @@ AppDataSource.initialize()
         app.use("/api/v1", authRoutes); // auth routes
         app.use("/api/v1", clinicRoutes); // clinic routes
         app.use("/api/v1", deptRoutes); // department routes
+        app.use("/api/v1", srvcRoutes); // service routes
 
         const PORT = process.env.PORT || 3006;
         // run app

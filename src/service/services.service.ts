@@ -5,7 +5,9 @@ export const createService = async (service: any) => {
     newService.name = service.name;
     newService.code = service.code;
     newService.price = service.price;
+    newService.facility_fee = service.facility_fee;
     newService.doctor_share = service.doctor_share;
+    newService.professional_share = service.professional_share;
 
     await Service.save(newService);
     return newService;
@@ -15,7 +17,9 @@ export const updateService = async (serviceFound: any, service: any) => {
     serviceFound.name = service.name;
     serviceFound.code = service.code;
     serviceFound.price = service.price;
+    serviceFound.facility_fee = service.facility_fee;
     serviceFound.doctor_share = service.doctor_share;
+    serviceFound.professional_share = service.professional_share;
 
     await Service.save(serviceFound);
     return serviceFound;

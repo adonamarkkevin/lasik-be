@@ -25,7 +25,13 @@ export class Service extends BaseEntity {
     price: number;
 
     @Column({ type: "bigint", nullable: true })
+    facility_fee: number;
+
+    @Column({ type: "bigint", nullable: true })
     doctor_share: number;
+
+    @Column({ type: "bigint", nullable: true })
+    professional_share: number;
 
     @CreateDateColumn()
     created_at: Date;
