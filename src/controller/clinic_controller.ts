@@ -46,18 +46,18 @@ export const upsertClinic = async (req: Request, res: Response) => {
         const clinicFound = await getClinicById(parseInt(clinicId));
 
         if (!clinicFound) {
-            return res.status(403).send({
+            return res.status(404).send({
                 status: "Not Found",
                 message: "Clinic does not exist.",
             });
         }
 
-        await updateClinic(clinicFound, reqBody);
+        const updatedClinic = await updateClinic(clinicFound, reqBody);
 
         return res.send({
             status: "Success",
             message: "Clinic Update Successful",
-            data: clinicFound,
+            data: updatedClinic,
         });
     } catch (error) {
         return res.status(500).send({

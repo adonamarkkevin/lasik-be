@@ -33,7 +33,7 @@ export const deleteDep = async (depFound: any) => {
     return;
 };
 
-export const getDepByKey = async (key: any, value: any, relation: any) => {
+export const getDepByKey = async (key: any, value: any, relation?: any) => {
     const depFound = await Department.findOne({
         where: { [key]: value },
         relations: relation,
