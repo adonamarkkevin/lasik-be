@@ -9,6 +9,7 @@ import {
     OneToMany,
     JoinColumn,
 } from "typeorm";
+import { Service } from "./services.entity";
 import { UserInfo } from "./user_info.entity";
 
 @Entity({ name: "deparment_info" })
@@ -36,4 +37,7 @@ export class Department extends BaseEntity {
 
     @OneToMany(() => UserInfo, (user) => user.deparment)
     user: UserInfo[];
+
+    @OneToMany(() => Service, (srvc) => srvc.department)
+    service: Service[];
 }

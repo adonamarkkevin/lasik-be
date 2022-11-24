@@ -7,7 +7,10 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
     ManyToMany,
+    ManyToOne,
+    JoinColumn,
 } from "typeorm";
+import { Department } from "./department.entity";
 import { Packcage } from "./packages.entity";
 import { PatientVisit } from "./patient_visit.entity";
 @Entity({ name: "services" })
@@ -47,4 +50,8 @@ export class Service extends BaseEntity {
 
     @ManyToMany(() => PatientVisit, (visit) => visit.service)
     patient_visit: PatientVisit[];
+
+    @ManyToOne(() => Department, (dept) => dept.service)
+    @JoinColumn({ name: "dept_id" })
+    department: Department;
 }

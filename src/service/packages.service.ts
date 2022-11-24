@@ -20,12 +20,13 @@ export const updatePackage = async (packageFound: any, packBody: any) => {
     packageFound.facility_fee = packBody.facility_fee;
     packageFound.doctor_share = packBody.doctor_share;
     packageFound.professional_share = packBody.professional_share;
+    packageFound.service = packBody.service;
 
     await Packcage.save(packageFound);
     return packageFound;
 };
 
-export const deleteService = async (packageFound: any) => {
+export const deletePackage = async (packageFound: any) => {
     await Packcage.softRemove(packageFound);
     return;
 };
@@ -50,8 +51,8 @@ export const addRelateService = async (
     packageFound: any,
     serviceFound: any,
 ) => {
-    await Packcage.createQueryBuilder()
-        .relation("service")
+    await Packcage.createQueryBuilder("package")
+        .relation("package.service")
         .of(packageFound)
         .add(serviceFound);
     return;
@@ -61,8 +62,8 @@ export const removeRelateService = async (
     packageFound: any,
     serviceFound: any,
 ) => {
-    await Packcage.createQueryBuilder()
-        .relation("service")
+    await Packcage.createQueryBuilder("package")
+        .relation("package.service")
         .of(packageFound)
         .remove(serviceFound);
     return;

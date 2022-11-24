@@ -5,6 +5,7 @@ import {
     deleteService,
     getServiceById,
     getServiceByKey,
+    relateToBranch,
     updateService,
 } from "../service/services.service";
 
@@ -14,13 +15,17 @@ export const insertSrvc = async (req: Request, res: Response) => {
         const srvcFound = await getServiceByKey("code", reqBody.code);
 
         if (srvcFound) {
-            return res.status(403).send({
+            return res.status(404).send({
                 status: "Bad Request",
                 message: "Service code exist.",
             });
         }
 
-        await createService(reqBody);
+        if (reqBody.deparmentId == undefined || null) {
+        }
+
+        const createdSrvc = await createService(reqBody);
+        await relateToBranch(createdSrvc.id, reqBody.deparmentId);
 
         return res.send({
             status: "Success",

@@ -20,6 +20,7 @@ export const updateService = async (serviceFound: any, service: any) => {
     serviceFound.facility_fee = service.facility_fee;
     serviceFound.doctor_share = service.doctor_share;
     serviceFound.professional_share = service.professional_share;
+    serviceFound.deparment = service.deparment;
 
     await Service.save(serviceFound);
     return serviceFound;
@@ -65,5 +66,13 @@ export const removeRelatePackage = async (
         .relation("package")
         .of(serviceFound)
         .remove(packageFound);
+    return;
+};
+
+export const relateToBranch = async (srvcId: number, deptId: number) => {
+    await Service.createQueryBuilder()
+        .relation("department")
+        .of(srvcId)
+        .set(deptId);
     return;
 };
