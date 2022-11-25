@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
-import {
-    createUser,
-    getUserById,
-    getUserByKey,
-} from "../service/user_info.service";
+import { createUser, getUserByKey } from "../service/user_info.service";
 import * as EmailValidator from "email-validator";
 import { compare } from "bcrypt";
 import { generateToken } from "../middleware/auth.middleware";

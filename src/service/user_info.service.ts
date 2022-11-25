@@ -3,14 +3,9 @@ import { hash } from "bcrypt";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-export const createUser = async (user: any, clinic?: any) => {
+export const createUser = async (user: any) => {
     const userInfo = new UserInfo();
     userInfo.user_name = user.user_name;
-    userInfo.password =
-        user.password !== null || undefined
-            ? await hash(user.password, parseInt(process.env.SALT_ROUNDS))
-            : null;
-    userInfo.role = user.role;
     userInfo.firstName = user.firstName;
     userInfo.lastName = user.lastName;
     userInfo.middleName = user.middleName;
@@ -20,20 +15,23 @@ export const createUser = async (user: any, clinic?: any) => {
     userInfo.birthday = user.birthday;
     userInfo.address = user.address;
     userInfo.contact = user.contact;
-    userInfo.clinic = clinic;
+
+    if (user.password !== undefined) {
+        userInfo.password = await hash(
+            user.password,
+            parseInt(process.env.SALT_ROUNDS),
+        );
+    }
 
     await UserInfo.save(userInfo);
 
     return userInfo;
 };
 
-export const updateUser = async (userInfo: any, user: any, clinic?: any) => {
+export const updateUser = async (userInfo: any, user: any) => {
     userInfo.user_name = user.user_name;
     userInfo.password =
-        user.password !== null || undefined
-            ? await hash(user.password, 10)
-            : null;
-    userInfo.role = user.role;
+        user.password === undefined ? null : await hash(user.password, 10);
     userInfo.firstName = user.firstName;
     userInfo.lastName = user.lastName;
     userInfo.middleName = user.middleName;
@@ -43,7 +41,6 @@ export const updateUser = async (userInfo: any, user: any, clinic?: any) => {
     userInfo.birthday = user.birthday;
     userInfo.address = user.address;
     userInfo.contact = user.contact;
-    userInfo.clinic = clinic;
 
     await UserInfo.save(userInfo);
 
@@ -84,5 +81,20 @@ export const assignClinic = async (userId: number, clinicId: number) => {
         .relation("clinic")
         .of(userId)
         .set(clinicId);
+    return;
+};
+
+export const assignDept = async (userId: number, deptId: number) => {
+    if (deptId === 0) {
+        await UserInfo.createQueryBuilder()
+            .relation("department")
+            .of(userId)
+            .set(null);
+        return;
+    }
+    await UserInfo.createQueryBuilder()
+        .relation("department")
+        .of(userId)
+        .set(deptId);
     return;
 };

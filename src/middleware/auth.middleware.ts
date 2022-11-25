@@ -37,7 +37,6 @@ export const checkToken = async (
     }
     try {
         const decoded = <any>jwt.verify(token, config.ACCESS_TOKEN_SECRET);
-        console.log(decoded.id);
         const userRelation = ["department", "clinic"];
         const userFound = await getUserById(decoded.id, userRelation);
         req.user = userFound;

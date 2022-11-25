@@ -12,6 +12,7 @@ import { tppRoutes } from "./route/third_party_provider.routes";
 import { transRoutes } from "./route/transaction.routes";
 import { queueRoutes } from "./route/queue.routes";
 import { pClassRoutes } from "./route/patient_class.routes";
+import { patientRoutes } from "./route/patient.routes";
 
 declare module "express" {
     export interface Request {
@@ -45,6 +46,7 @@ AppDataSource.initialize()
         app.use("/api/v1", transRoutes); // transaction routes
         app.use("/api/v1", queueRoutes); // transaction routes
         app.use("/api/v1", pClassRoutes); // patient class routes
+        app.use("/api/v1", patientRoutes); // patient routes
 
         const PORT = process.env.PORT || 3006;
         // run app

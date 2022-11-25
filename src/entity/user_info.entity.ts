@@ -21,15 +21,6 @@ export class UserInfo extends BaseEntity {
     id: number;
 
     @Column({ nullable: true })
-    user_name: string;
-
-    @Column({ select: false, nullable: true })
-    password: string;
-
-    @Column({ default: "employee", nullable: true })
-    role: string;
-
-    @Column({ nullable: true })
     firstName: string;
 
     @Column({ nullable: true })
@@ -37,6 +28,12 @@ export class UserInfo extends BaseEntity {
 
     @Column({ nullable: true })
     middleName: string;
+
+    @Column({ nullable: true })
+    user_name: string;
+
+    @Column({ select: false, nullable: true })
+    password: string;
 
     @Column({ nullable: true })
     email: string;
@@ -47,7 +44,7 @@ export class UserInfo extends BaseEntity {
     @Column({ nullable: true })
     civil_status: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "date", nullable: true })
     birthday: string;
 
     @Column({ nullable: true })
