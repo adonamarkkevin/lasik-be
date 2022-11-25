@@ -9,7 +9,7 @@ import { deptRoutes } from "./route/deparment.routes";
 import { srvcRoutes } from "./route/services.routes";
 import { pckgRoutes } from "./route/packages.routes";
 import { tppRoutes } from "./route/third_party_provider.routes";
-import { pClassRoutes } from "./route/patient_class.routes";
+import { transRoutes } from "./route/transaction.routes";
 
 declare module "express" {
     export interface Request {
@@ -40,7 +40,7 @@ AppDataSource.initialize()
         app.use("/api/v1", srvcRoutes); // service routes
         app.use("/api/v1", pckgRoutes); // package routes
         app.use("/api/v1", tppRoutes); // third party provider routes
-        app.use("/api/v1", pClassRoutes); // patient class routes
+        app.use("/api/v1", transRoutes); // transaction routes
 
         const PORT = process.env.PORT || 3006;
         // run app
