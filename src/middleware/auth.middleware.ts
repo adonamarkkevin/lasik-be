@@ -46,3 +46,23 @@ export const checkToken = async (
 
     return next();
 };
+
+export const adminCheck = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const userFound = req.user;
+    const dept = userFound.department;
+    let admin = [1, 5];
+    console.log(dept);
+
+    if (admin.indexOf(dept.id) > -1) {
+        return next();
+    } else {
+        return res.status(401).send({
+            status: `Unauthorized`,
+            message: `Admin and Super Admin Resource. Permission Denied`,
+        });
+    }
+};

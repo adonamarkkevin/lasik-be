@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserInfo } from "../entity/user_info.entity";
 import {
+    assignClinic,
     assignDept,
     createUser,
     deleteUser,
@@ -9,22 +10,32 @@ import {
     updateUser,
 } from "../service/user_info.service";
 
-export const addPatient = async (req: Request, res: Response) => {
+export const addLasikUser = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body;
-        const patientFound = await getUserByKey("email", reqBody.email);
-        if (patientFound) {
+        const userFound = req.user;
+        const clinic = userFound.clinic;
+        const lasikUser = await getUserByKey("email", reqBody.email);
+        if (lasikUser) {
             return res.status(403).send({
                 status: "Bad Request",
                 message: "Email exist.",
             });
         }
+        if (reqBody.deptId === undefined) {
+            return res.status(403).send({
+                status: "Bad Request",
+                message: "Department ID is Required",
+            });
+        }
+
         const createdUser = await createUser(reqBody);
-        await assignDept(createdUser.id, 2);
+        await assignDept(createdUser.id, reqBody.deptId);
+        await assignClinic(createdUser.id, 1);
 
         return res.send({
             status: "Success",
-            message: "Patient Register Successful",
+            message: "Lasik User Register Successful",
         });
     } catch (error) {
         return res.status(500).send({
@@ -35,24 +46,24 @@ export const addPatient = async (req: Request, res: Response) => {
     }
 };
 
-export const updatePatient = async (req: Request, res: Response) => {
+export const updateLasikUser = async (req: Request, res: Response) => {
     try {
-        const { patientId } = req.params;
+        const { userId } = req.params;
         const reqBody = req.body;
-        const patientFound = await getUserById(parseInt(patientId));
-        if (!patientFound) {
-            return res.status(404).send({
+        const lasikUser = await getUserById(parseInt(userId));
+        if (!lasikUser) {
+            return res.status(403).send({
                 status: "Not Found",
-                message: "Patient does not exist.",
+                message: "User does not exist.",
             });
         }
 
-        const updatedpatient = await updateUser(patientFound, reqBody);
+        const updateLasikUser = await updateUser(lasikUser, reqBody);
 
         return res.send({
             status: "Success",
             message: "Patient Update Successful",
-            data: updatedpatient,
+            data: updateLasikUser,
         });
     } catch (error) {
         return res.status(500).send({
@@ -63,23 +74,22 @@ export const updatePatient = async (req: Request, res: Response) => {
     }
 };
 
-export const removePatient = async (req: Request, res: Response) => {
+export const rmLasikUser = async (req: Request, res: Response) => {
     try {
-        const { patientId } = req.params;
-
-        const patientFound = await getUserById(parseInt(patientId));
-        if (!patientFound) {
-            return res.status(404).send({
+        const { userId } = req.params;
+        const lasikUser = await getUserById(parseInt(userId));
+        if (!lasikUser) {
+            return res.status(403).send({
                 status: "Not Found",
-                message: "Patient does not exist.",
+                message: "User does not exist.",
             });
         }
 
-        await deleteUser(patientFound);
+        await deleteUser(lasikUser);
 
         return res.send({
             status: "Success",
-            message: "Patient Remove Successful",
+            message: "Lasik User Remove Successful",
         });
     } catch (error) {
         return res.status(500).send({
@@ -90,18 +100,17 @@ export const removePatient = async (req: Request, res: Response) => {
     }
 };
 
-export const getOnePatient = async (req: Request, res: Response) => {
+export const getOneUser = async (req: Request, res: Response) => {
     try {
-        const { patientId } = req.params;
-
-        const patientFound = await getUserById(parseInt(patientId));
-        if (!patientFound) {
-            return res.status(404).send({
+        const { userId } = req.params;
+        const lasikUser = await getUserById(parseInt(userId));
+        if (!lasikUser) {
+            return res.status(403).send({
                 status: "Not Found",
-                message: "Patient does not exist.",
+                message: "User does not exist.",
             });
         }
-        return res.send(patientFound);
+        return res.send(lasikUser);
     } catch (error) {
         return res.status(500).send({
             status: `Server Error`,
@@ -111,18 +120,22 @@ export const getOnePatient = async (req: Request, res: Response) => {
     }
 };
 
-export const viewAllPatient = async (req: Request, res: Response) => {
+export const viewAllUser = async (req: Request, res: Response) => {
     try {
-        const [allPatient, count] = await UserInfo.findAndCount({
+        const userFound = req.user;
+        const clinic = userFound.clinic;
+
+        const [allUser, count] = await UserInfo.findAndCount({
             where: {
-                department: {
-                    id: 2,
+                clinic: {
+                    id: clinic.id,
                 },
             },
+            relations: ["department"],
         });
 
         return res.send({
-            data: allPatient,
+            data: allUser,
             count: count,
         });
     } catch (error) {
