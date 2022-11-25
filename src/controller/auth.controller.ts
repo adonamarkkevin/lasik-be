@@ -70,9 +70,8 @@ export const loginUser = async (req: Request, res: Response) => {
 export const getCurrentUser = async (req: Request, res: Response) => {
     try {
         const currentUser = req.user;
-        const userFound = await getUserById(parseInt(currentUser.id));
 
-        return res.send(userFound);
+        return res.send(currentUser);
     } catch (err) {
         return res.status(401).send({
             status: `Server Error`,

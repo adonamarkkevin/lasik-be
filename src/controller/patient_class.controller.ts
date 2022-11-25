@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { PatientClass } from "../entity/patient_class.entity";
 import {
+    createPatientClass,
     deletePatientClass,
     getPatientClassById,
     getPatientClassByKey,
@@ -18,6 +19,8 @@ export const addPatientClass = async (req: Request, res: Response) => {
                 message: "Patient class code exist.",
             });
         }
+
+        await createPatientClass(reqBody);
 
         return res.send({
             status: "Success",
@@ -113,7 +116,7 @@ export const getOneClass = async (req: Request, res: Response) => {
 
 export const viewAllClass = async (req: Request, res: Response) => {
     try {
-        const [allClass, count] = await PatientClass.find();
+        const [allClass, count] = await PatientClass.findAndCount();
 
         return res.send({
             data: allClass,

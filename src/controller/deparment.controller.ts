@@ -37,10 +37,10 @@ export const insertDept = async (req: Request, res: Response) => {
 
 export const upsertDept = async (req: Request, res: Response) => {
     try {
-        const { deparmentId } = req.params;
+        const { deptId } = req.params;
         const reqBody = req.body;
 
-        const deptFound = await getDepById(parseInt(deparmentId));
+        const deptFound = await getDepById(parseInt(deptId));
 
         if (!deptFound) {
             return res.status(404).send({
@@ -67,8 +67,8 @@ export const upsertDept = async (req: Request, res: Response) => {
 
 export const getOneDept = async (req: Request, res: Response) => {
     try {
-        const { deparmentId } = req.params;
-        const deptFound = await getDepById(parseInt(deparmentId));
+        const { deptId } = req.params;
+        const deptFound = await getDepById(parseInt(deptId));
 
         if (!deptFound) {
             return res.status(403).send({
@@ -88,8 +88,8 @@ export const getOneDept = async (req: Request, res: Response) => {
 
 export const removeDept = async (req: Request, res: Response) => {
     try {
-        const { deparmentId } = req.params;
-        const deptFound = await getDepById(parseInt(deparmentId));
+        const { deptId } = req.params;
+        const deptFound = await getDepById(parseInt(deptId));
 
         if (!deptFound) {
             return res.status(403).send({
@@ -115,7 +115,9 @@ export const removeDept = async (req: Request, res: Response) => {
 
 export const viewAllDept = async (req: Request, res: Response) => {
     try {
-        const [allDept, count] = await Department.find();
+        const [allDept, count] = await Department.findAndCount({
+            where: { for_viewing: true },
+        });
 
         return res.send({
             data: allDept,

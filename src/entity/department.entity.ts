@@ -26,6 +26,9 @@ export class Department extends BaseEntity {
     @Column({ nullable: true })
     room_no: string;
 
+    @Column({ type: "tinyint", width: 1, default: true })
+    for_viewing?: boolean;
+
     @CreateDateColumn()
     created_at: Date;
 
@@ -35,7 +38,7 @@ export class Department extends BaseEntity {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @OneToMany(() => UserInfo, (user) => user.deparment)
+    @OneToMany(() => UserInfo, (user) => user.department)
     user: UserInfo[];
 
     @OneToMany(() => Service, (srvc) => srvc.department)

@@ -98,7 +98,7 @@ export class UserInfo extends BaseEntity {
 
     @ManyToOne(() => Department, (dep) => dep.user)
     @JoinColumn({ name: "dep_id" })
-    deparment: Department;
+    department: Department;
 
     @OneToMany(
         () => TransactionService,

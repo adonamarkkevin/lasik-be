@@ -34,13 +34,13 @@ export class Clinic extends BaseEntity {
     @Column()
     zip_code: string;
 
-    @Column()
+    @Column({ nullable: true })
     tel_no: string;
 
-    @Column()
+    @Column({ nullable: true })
     mobile_no: string;
 
-    @Column()
+    @Column({ nullable: true })
     email: string;
 
     @CreateDateColumn()
