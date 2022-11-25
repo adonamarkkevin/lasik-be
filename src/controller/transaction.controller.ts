@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
+import { Queue } from "../entity/queue.entity";
 import { TransactionInfo } from "../entity/transaction_info.entity";
-import { transRefCode } from "../helper/ref_number.help";
+import { queueNumber, transRefCode } from "../helper/ref_number.help";
 import { getPackageById } from "../service/packages.service";
 import { getServiceById } from "../service/services.service";
 import {
@@ -10,6 +11,7 @@ import {
     createTransaction,
     deleteTransaction,
     getTransactionById,
+    updateTransaction,
 } from "../service/transaction_info.service";
 import {
     createTransactionPackage,
@@ -238,6 +240,41 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
         return res.send({
             data: allTrans,
             count: count,
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: `Server Error`,
+            message: `Please contact administrator`,
+            error: error.message,
+        });
+    }
+};
+
+export const processTrans = async (req: Request, res: Response) => {
+    try {
+        const { transId } = req.params;
+        const reqBody = req.body;
+        const userFound = req.user;
+        const clinic = userFound.clinic;
+        const transFound = await getTransactionById(parseInt(transId));
+
+        if (!transFound) {
+            return res.status(404).send({
+                status: "Not Found",
+                message: "Transaction does not exist.",
+            });
+        }
+
+        const updatedTrans = await updateTransaction(transFound, reqBody);
+        let qNum = await queueNumber(clinic.hosp_code);
+        await Queue.create({
+            queue_number: qNum,
+        }).save();
+
+        return res.send({
+            status: "Success",
+            message: "Transaction Process Successful",
+            data: updatedTrans,
         });
     } catch (error) {
         return res.status(500).send({
