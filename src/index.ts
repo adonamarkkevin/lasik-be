@@ -10,6 +10,7 @@ import { srvcRoutes } from "./route/services.routes";
 import { pckgRoutes } from "./route/packages.routes";
 import { tppRoutes } from "./route/third_party_provider.routes";
 import { transRoutes } from "./route/transaction.routes";
+import { queueRoutes } from "./route/queue.routes";
 
 declare module "express" {
     export interface Request {
@@ -41,6 +42,7 @@ AppDataSource.initialize()
         app.use("/api/v1", pckgRoutes); // package routes
         app.use("/api/v1", tppRoutes); // third party provider routes
         app.use("/api/v1", transRoutes); // transaction routes
+        app.use("/api/v1", queueRoutes); // transaction routes
 
         const PORT = process.env.PORT || 3006;
         // run app
