@@ -8,9 +8,16 @@ import {
     DeleteDateColumn,
     ManyToMany,
     JoinTable,
+    OneToOne,
+    JoinColumn,
+    ManyToOne,
 } from "typeorm";
+import { Clinic } from "./clinic_branch.entity";
+import { Queue } from "./queue.entity";
+import { ThirdParty } from "./third_party_provider.entity";
 import { TransactionPackage } from "./transaction_packages.entity";
 import { TransactionService } from "./transaction_services.entity";
+import { UserInfo } from "./user_info.entity";
 
 export enum PaymentType {
     CASH = "cash",
@@ -44,9 +51,6 @@ export class TransactionInfo extends BaseEntity {
 
     @Column({ nullable: true })
     invoice_number: string;
-
-    @Column({ nullable: true })
-    third_party_payor_code: string;
 
     @Column({ type: "enum", enum: PaymentType, nullable: true })
     payment_type: PaymentType;
@@ -105,9 +109,18 @@ export class TransactionInfo extends BaseEntity {
     @DeleteDateColumn()
     deleted_at: Date;
 
+    @ManyToOne(() => ThirdParty, (tpp) => tpp.transaction_info)
+    @JoinColumn({ name: "tpp_id" })
+    third_party_provider: ThirdParty;
+
+    @ManyToOne(() => UserInfo, (user) => user.transaction_info)
+    @JoinColumn({ name: "patient_id" })
+    patient: UserInfo;
+
     @ManyToMany(
         () => TransactionPackage,
         (transpack) => transpack.transaction_info,
+        { cascade: true, onDelete: "CASCADE" },
     )
     @JoinTable({ name: "jointbl_transactions_packages" })
     transaction_package: TransactionPackage[];
@@ -115,7 +128,15 @@ export class TransactionInfo extends BaseEntity {
     @ManyToMany(
         () => TransactionService,
         (transService) => transService.transaction_info,
+        { cascade: true, onDelete: "CASCADE" },
     )
     @JoinTable({ name: "jointbl_transactions_services" })
     transaction_service: TransactionService[];
+
+    @ManyToOne(() => Clinic, (clinic) => clinic.transaction_info)
+    @JoinColumn({ name: "clinic_id" })
+    clinic: Clinic;
+
+    @OneToOne(() => Queue, (q) => q.transaction_info)
+    queue: Queue;
 }

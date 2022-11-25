@@ -12,7 +12,7 @@ import {
 } from "typeorm";
 import { Clinic } from "./clinic_branch.entity";
 import { Department } from "./department.entity";
-import { PatientVisit } from "./patient_visit.entity";
+import { TransactionInfo } from "./transaction_info.entity";
 import { TransactionService } from "./transaction_services.entity";
 
 @Entity({ name: "user_info" })
@@ -106,6 +106,6 @@ export class UserInfo extends BaseEntity {
     )
     assigned_service: TransactionService[];
 
-    @OneToMany(() => PatientVisit, (visit) => visit.patient)
-    patient_visit: PatientVisit[];
+    @OneToMany(() => TransactionInfo, (trans) => trans.patient)
+    transaction_info: TransactionInfo[];
 }

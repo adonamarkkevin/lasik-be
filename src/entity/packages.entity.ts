@@ -9,7 +9,6 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
 } from "typeorm";
-import { PatientVisit } from "./patient_visit.entity";
 
 import { Service } from "./services.entity";
 
@@ -48,7 +47,4 @@ export class Packcage extends BaseEntity {
     @ManyToMany(() => Service, (service) => service.package)
     @JoinTable({ name: "jointbl_services_packcages" })
     service: Service[];
-
-    @ManyToMany(() => PatientVisit, (visit) => visit.package)
-    patient_visit: PatientVisit[];
 }

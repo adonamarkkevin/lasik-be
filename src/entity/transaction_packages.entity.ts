@@ -59,6 +59,7 @@ export class TransactionPackage extends BaseEntity {
     @ManyToMany(
         () => TransactionService,
         (transService) => transService.transaction_package,
+        { cascade: true },
     )
     @JoinTable({ name: "jointbl_transactionpckg_transactionsrvc" })
     transaction_service: TransactionService[];

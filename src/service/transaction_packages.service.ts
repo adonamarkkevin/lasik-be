@@ -9,6 +9,7 @@ export const createTransactionPackage = async (packBody: any) => {
     newPackage.doctor_share = packBody.doctor_share;
     newPackage.professional_share = packBody.professional_share;
     newPackage.amount_paid = packBody.amount_paid;
+    newPackage.transaction_service = packBody.service;
 
     await TransactionPackage.save(newPackage);
     return newPackage;

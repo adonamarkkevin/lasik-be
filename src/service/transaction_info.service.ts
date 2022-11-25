@@ -8,7 +8,6 @@ export const createTransaction = async (transaction: any) => {
     newTransaction.eye = transaction.eye;
     newTransaction.info_source = transaction.info_source;
     newTransaction.invoice_number = transaction.invoice_number;
-    newTransaction.third_party_payor_code = transaction.third_party_payor_code;
     newTransaction.payment_type = transaction.payment_type;
     newTransaction.paid_amount = transaction.paid_amount;
     newTransaction.card_no = transaction.card_no;
@@ -130,5 +129,35 @@ export const removeServiceTransaction = async (
         .relation("transaction_service")
         .of(transaction)
         .remove(serviceFound);
+    return;
+};
+
+export const addPatientTransaction = async (
+    transId: number,
+    patientId: number,
+) => {
+    await TransactionInfo.createQueryBuilder()
+        .relation("patient")
+        .of(transId)
+        .set(patientId);
+    return;
+};
+
+export const addTppTransaction = async (transId: number, tppId: number) => {
+    await TransactionInfo.createQueryBuilder()
+        .relation("third_party_provider")
+        .of(transId)
+        .set(tppId);
+    return;
+};
+
+export const addBranchTransaction = async (
+    transId: number,
+    clinicId: number,
+) => {
+    await TransactionInfo.createQueryBuilder()
+        .relation("clinic")
+        .of(transId)
+        .set(clinicId);
     return;
 };
