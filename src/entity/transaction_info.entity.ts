@@ -120,7 +120,7 @@ export class TransactionInfo extends BaseEntity {
     @ManyToMany(
         () => TransactionPackage,
         (transpack) => transpack.transaction_info,
-        { cascade: true, onDelete: "CASCADE" },
+        { cascade: true, onDelete: "CASCADE", eager: true },
     )
     @JoinTable({ name: "jointbl_transactions_packages" })
     transaction_package: TransactionPackage[];
@@ -128,7 +128,7 @@ export class TransactionInfo extends BaseEntity {
     @ManyToMany(
         () => TransactionService,
         (transService) => transService.transaction_info,
-        { cascade: true, onDelete: "CASCADE" },
+        { cascade: true, onDelete: "CASCADE", eager: true },
     )
     @JoinTable({ name: "jointbl_transactions_services" })
     transaction_service: TransactionService[];
