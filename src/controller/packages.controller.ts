@@ -22,6 +22,13 @@ export const insertPckg = async (req: Request, res: Response) => {
             });
         }
 
+        if (reqBody.services === undefined || reqBody.services.length <= 0) {
+            return res.status(403).send({
+                status: "Bad Request",
+                message: "Service(s) is/are required.",
+            });
+        }
+
         const services = reqBody.services; // array of service id
 
         const createdPckg = await createPackage(reqBody);

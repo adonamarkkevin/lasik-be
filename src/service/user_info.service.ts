@@ -30,8 +30,6 @@ export const createUser = async (user: any) => {
 
 export const updateUser = async (userInfo: any, user: any) => {
     userInfo.user_name = user.user_name;
-    userInfo.password =
-        user.password === undefined ? null : await hash(user.password, 10);
     userInfo.firstName = user.firstName;
     userInfo.lastName = user.lastName;
     userInfo.middleName = user.middleName;
@@ -41,6 +39,13 @@ export const updateUser = async (userInfo: any, user: any) => {
     userInfo.birthday = user.birthday;
     userInfo.address = user.address;
     userInfo.contact = user.contact;
+
+    if (user.password !== undefined) {
+        userInfo.password = await hash(
+            user.password,
+            parseInt(process.env.SALT_ROUNDS),
+        );
+    }
 
     await UserInfo.save(userInfo);
 

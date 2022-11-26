@@ -19,6 +19,9 @@ export class Queue extends BaseEntity {
     @Column()
     queue_number: string;
 
+    @Column({ default: "ON QUEUE" }) // ON QUEUE, ON PROCESS, DONE
+    queue_status: string;
+
     @CreateDateColumn()
     created_at: Date;
 

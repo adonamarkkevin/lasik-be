@@ -21,7 +21,7 @@ export const insertSrvc = async (req: Request, res: Response) => {
             });
         }
 
-        if (reqBody.deparmentId == undefined || null || "") {
+        if (reqBody.deptId == undefined || null || "") {
             return res.status(403).send({
                 status: "Bad Request",
                 message: "Department ID is required",
@@ -29,7 +29,7 @@ export const insertSrvc = async (req: Request, res: Response) => {
         }
 
         const createdSrvc = await createService(reqBody);
-        await relateToBranch(createdSrvc.id, reqBody.deparmentId);
+        await relateToBranch(createdSrvc.id, reqBody.deptId);
 
         return res.send({
             status: "Success",
@@ -127,7 +127,7 @@ export const getOneSrvc = async (req: Request, res: Response) => {
 
 export const viewAllSrvc = async (req: Request, res: Response) => {
     try {
-        const [allSrvc, count] = await Service.find();
+        const [allSrvc, count] = await Service.findAndCount();
 
         return res.send({
             data: allSrvc,

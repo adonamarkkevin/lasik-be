@@ -16,6 +16,13 @@ export const insertTpp = async (req: Request, res: Response) => {
             reqBody.third_party_code,
         );
 
+        if (reqBody.pClassId === undefined) {
+            return res.status(403).send({
+                status: "Bad Request",
+                message: "Patient Class ID is required",
+            });
+        }
+
         if (tppFound) {
             return res.status(403).send({
                 status: "Bad Request",
@@ -119,7 +126,14 @@ export const getOneTpp = async (req: Request, res: Response) => {
 
 export const viewAllTpp = async (req: Request, res: Response) => {
     try {
-        const [allTpp, count] = await ThirdParty.findAndCount();
+        const { pClassId } = req.params;
+        const [allTpp, count] = await ThirdParty.findAndCount({
+            where: {
+                patient_class: {
+                    id: parseInt(pClassId),
+                },
+            },
+        });
 
         return res.send({
             data: allTpp,

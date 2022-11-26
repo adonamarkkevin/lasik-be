@@ -7,6 +7,7 @@ import { getServiceById } from "../service/services.service";
 import {
     addBranchTransaction,
     addPackageTransaction,
+    addPatientTransaction,
     addServiceTransaction,
     createTransaction,
     deleteTransaction,
@@ -32,8 +33,16 @@ export const insertTransaction = async (req: Request, res: Response) => {
         let reqBody = req.body;
         reqBody.referrence_num = refCode;
 
+        if (reqBody.patientId === undefined) {
+            return res.status(403).send({
+                status: "Bad Request",
+                message: "Patient ID is required",
+            });
+        }
+
         const transaction = await createTransaction(reqBody);
         await addBranchTransaction(transaction.id, userBranch.id);
+        await addPatientTransaction(transaction.id, reqBody.patientId);
 
         const packageIdArr = reqBody.package;
         const serviceIdArr = reqBody.service;

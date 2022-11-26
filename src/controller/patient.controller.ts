@@ -116,7 +116,7 @@ export const viewAllPatient = async (req: Request, res: Response) => {
         const [allPatient, count] = await UserInfo.findAndCount({
             where: {
                 department: {
-                    id: 2,
+                    id: 2, // department 2 = PATIENT
                 },
             },
         });

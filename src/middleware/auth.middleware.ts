@@ -33,7 +33,10 @@ export const checkToken = async (
     }
 
     if (!token) {
-        return res.status(403).send("A token is required for authentication");
+        return res.status(403).send({
+            status: "Bad Request",
+            message: "A token is required for authentication",
+        });
     }
     try {
         const decoded = <any>jwt.verify(token, config.ACCESS_TOKEN_SECRET);
@@ -41,7 +44,10 @@ export const checkToken = async (
         const userFound = await getUserById(decoded.id, userRelation);
         req.user = userFound;
     } catch (err) {
-        return res.status(401).send("Invalid Token");
+        return res.status(401).send({
+            status: "Unauthorized",
+            message: "Invalid Token",
+        });
     }
 
     return next();
@@ -54,7 +60,7 @@ export const adminCheck = async (
 ) => {
     const userFound = req.user;
     const dept = userFound.department;
-    let admin = [1, 5];
+    let admin = [1, 5]; // 1 = Super Admin, 2 = Admin
     console.log(dept);
 
     if (admin.indexOf(dept.id) > -1) {
@@ -63,6 +69,26 @@ export const adminCheck = async (
         return res.status(401).send({
             status: `Unauthorized`,
             message: `Admin and Super Admin Resource. Permission Denied`,
+        });
+    }
+};
+
+export const doctorCheck = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const userFound = req.user;
+    const dept = userFound.department;
+    let doctor = [12]; // 12 = Doctor. Placed it on array just in case another user type can use doctor's resources
+    console.log(dept);
+
+    if (doctor.indexOf(dept.id) > -1) {
+        return next();
+    } else {
+        return res.status(401).send({
+            status: `Unauthorized`,
+            message: `Doctor's Resource. Permission Denied`,
         });
     }
 };
