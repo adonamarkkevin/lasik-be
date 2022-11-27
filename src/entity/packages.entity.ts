@@ -44,7 +44,10 @@ export class Packcage extends BaseEntity {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @ManyToMany(() => Service, (service) => service.package)
+    @ManyToMany(() => Service, (service) => service.package, {
+        cascade: ["insert", "update"],
+        eager: true,
+    })
     @JoinTable({ name: "jointbl_services_packcages" })
     service: Service[];
 }

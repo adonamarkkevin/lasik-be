@@ -13,7 +13,7 @@ import { getServiceById } from "../service/services.service";
 export const insertPckg = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body;
-        const pckgFound = await getPackageByKey("code", reqBody);
+        const pckgFound = await getPackageByKey("code", reqBody.code);
 
         if (pckgFound) {
             return res.status(403).send({
@@ -22,21 +22,26 @@ export const insertPckg = async (req: Request, res: Response) => {
             });
         }
 
-        if (reqBody.services === undefined || reqBody.services.length <= 0) {
+        if (reqBody.services === undefined) {
             return res.status(403).send({
                 status: "Bad Request",
                 message: "Service(s) is/are required.",
             });
         }
 
-        const services = reqBody.services; // array of service id
-
         const createdPckg = await createPackage(reqBody);
+        const services = reqBody.services; // array of service id
 
         for (let i = 0; i < services.length; i++) {
             const srvcId = services[i];
             const srvcFound = await getServiceById(parseInt(srvcId));
-            await addRelateService(createdPckg, srvcFound);
+            if (!srvcFound) {
+                return res.status(404).send({
+                    status: "Bad Request",
+                    message: "Service does not exist.",
+                });
+            }
+            await addRelateService(createdPckg.id, srvcFound.id);
         }
 
         return res.send({
@@ -57,13 +62,23 @@ export const upsertPckg = async (req: Request, res: Response) => {
         const { pckgId } = req.params;
         const reqBody = req.body;
 
-        const pckgFound = await getPackageById(parseInt(pckgId), "service");
+        const pckgFound = await getPackageById(parseInt(pckgId), ["service"]);
+
         if (!pckgFound) {
             return res.status(404).send({
                 status: "Bad Request",
                 message: "Package does not exist.",
             });
         }
+        const serviceArrId = reqBody.services;
+        let services: any = [];
+        for (let i = 0; i < serviceArrId.length; i++) {
+            const srvcId = serviceArrId[i];
+            const srvcFound = await getServiceById(parseInt(srvcId));
+            services.push(srvcFound);
+        }
+
+        reqBody.services = services;
         const updatedPckg = await updatePackage(pckgFound, reqBody);
 
         return res.send({
@@ -84,7 +99,7 @@ export const removePckg = async (req: Request, res: Response) => {
     try {
         const { pckgId } = req.params;
 
-        const pckgFound = await getPackageById(parseInt(pckgId), "service");
+        const pckgFound = await getPackageById(parseInt(pckgId));
 
         if (!pckgFound) {
             return res.status(404).send({
@@ -112,7 +127,7 @@ export const getOnePckg = async (req: Request, res: Response) => {
     try {
         const { pckgId } = req.params;
 
-        const pckgFound = await getPackageById(parseInt(pckgId), "service");
+        const pckgFound = await getPackageById(parseInt(pckgId), ["service"]);
 
         if (!pckgFound) {
             return res.status(404).send({

@@ -20,7 +20,7 @@ export const updatePackage = async (packageFound: any, packBody: any) => {
     packageFound.facility_fee = packBody.facility_fee;
     packageFound.doctor_share = packBody.doctor_share;
     packageFound.professional_share = packBody.professional_share;
-    packageFound.service = packBody.service;
+    packageFound.service = packBody.services;
 
     await Packcage.save(packageFound);
     return packageFound;
@@ -47,14 +47,11 @@ export const getPackageByKey = async (key: any, value: any, relation?: any) => {
     return packageFound;
 };
 
-export const addRelateService = async (
-    packageFound: any,
-    serviceFound: any,
-) => {
-    await Packcage.createQueryBuilder("package")
-        .relation("package.service")
-        .of(packageFound)
-        .add(serviceFound);
+export const addRelateService = async (pckgId: number, srvcId: number) => {
+    await Packcage.createQueryBuilder()
+        .relation("service")
+        .of(pckgId)
+        .add(srvcId);
     return;
 };
 

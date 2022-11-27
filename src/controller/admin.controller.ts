@@ -31,7 +31,7 @@ export const addLasikUser = async (req: Request, res: Response) => {
 
         const createdUser = await createUser(reqBody);
         await assignDept(createdUser.id, reqBody.deptId);
-        await assignClinic(createdUser.id, 1);
+        await assignClinic(createdUser.id, clinic.id);
 
         return res.send({
             status: "Success",
