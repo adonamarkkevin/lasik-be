@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { createUser, getUserByKey } from "../service/user_info.service";
+import {
+    createUser,
+    getUserById,
+    getUserByKey,
+    updateUser,
+} from "../service/user_info.service";
 import * as EmailValidator from "email-validator";
 import { compare } from "bcrypt";
 import { generateToken } from "../middleware/auth.middleware";
@@ -73,6 +78,41 @@ export const getCurrentUser = async (req: Request, res: Response) => {
             status: `Server Error`,
             message: `Please contact administrator`,
             error: err.message,
+        });
+    }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+    try {
+        const currentUser = req.user;
+        const userFound = await getUserByKey("id", currentUser.id);
+        const { currentPassword, newPassword } = req.body;
+
+        const updateUserPass = {
+            password: newPassword,
+        };
+
+        compare(currentPassword, userFound.password, async (err, data) => {
+            if (err) {
+                return res.status(500).send({
+                    status: `Server Error`,
+                    message: `Please contact administrator`,
+                    error: err.message,
+                });
+            }
+            if (data) {
+                await updateUser(userFound, updateUserPass);
+                return res.send({
+                    status: "Success",
+                    message: "Password Change Successfull",
+                });
+            }
+        });
+    } catch (error) {
+        return res.status(401).send({
+            status: `Server Error`,
+            message: `Please contact administrator`,
+            error: error.message,
         });
     }
 };
