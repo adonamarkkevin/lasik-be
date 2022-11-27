@@ -106,7 +106,9 @@ export const getOneSrvc = async (req: Request, res: Response) => {
     try {
         const { srvcId } = req.params;
 
-        const srvcFound = await getServiceById(parseInt(srvcId));
+        const srvcFound = await getServiceById(parseInt(srvcId), [
+            "department",
+        ]);
 
         if (!srvcFound) {
             return res.status(404).send({
@@ -127,7 +129,9 @@ export const getOneSrvc = async (req: Request, res: Response) => {
 
 export const viewAllSrvc = async (req: Request, res: Response) => {
     try {
-        const [allSrvc, count] = await Service.findAndCount();
+        const [allSrvc, count] = await Service.findAndCount({
+            relations: ["department"],
+        });
 
         return res.send({
             data: allSrvc,
