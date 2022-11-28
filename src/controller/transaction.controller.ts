@@ -295,11 +295,25 @@ export const processTrans = async (req: Request, res: Response) => {
         const transFound = await getTransactionById(parseInt(transId), [
             "patient_class",
         ]);
+        const queueFound = await Queue.findOne({
+            where: {
+                transaction_info: {
+                    id: transFound.id,
+                },
+            },
+        });
 
         if (!transFound) {
             return res.status(404).send({
                 status: "Not Found",
                 message: "Transaction does not exist.",
+            });
+        }
+
+        if (queueFound) {
+            return res.status(403).send({
+                status: "Bad Request",
+                message: "Transaction is already on queue.",
             });
         }
 
