@@ -362,11 +362,15 @@ export const processTrans = async (req: Request, res: Response) => {
 export const viewBillSummaryPerDate = async (req: Request, res: Response) => {
     try {
         const { date_from, date_to } = req.body;
-        const userFound = req.body;
+        const userFound = req.user;
         const clinic = userFound.clinic;
-        const dateAfter = new Date(date_to).getDate() + 1;
+        const dateAfter = new Date(date_to).getDate() + 2;
+
+        console.log(dateAfter);
         const dateFrom = new Date(date_from);
-        const dateTo = new Date(dateAfter);
+        const dateTo = new Date(date_to);
+
+        console.log(dateFrom, dateTo);
 
         const [allBilling, count] = await TransactionInfo.findAndCount({
             where: {
@@ -374,7 +378,10 @@ export const viewBillSummaryPerDate = async (req: Request, res: Response) => {
                     id: clinic.id,
                 },
                 transaction_type: "billing",
-                created_at: Between(dateFrom, dateTo),
+                created_at: Between(
+                    dateFrom,
+                    new Date(dateTo.getTime() + 86400000), // +1 day since date start at 12am
+                ),
             },
         });
 
@@ -397,11 +404,10 @@ export const viewInvoiceSummaryPerDate = async (
 ) => {
     try {
         const { date_from, date_to } = req.body;
-        const userFound = req.body;
+        const userFound = req.user;
         const clinic = userFound.clinic;
-        const dateAfter = new Date(date_to).getDate() + 1;
+        const dateTo = new Date(date_to);
         const dateFrom = new Date(date_from);
-        const dateTo = new Date(dateAfter);
 
         const [allInvoice, count] = await TransactionInfo.findAndCount({
             where: {
@@ -409,7 +415,10 @@ export const viewInvoiceSummaryPerDate = async (
                     id: clinic.id,
                 },
                 transaction_type: Not("billing"),
-                created_at: Between(dateFrom, dateTo),
+                created_at: Between(
+                    dateFrom,
+                    new Date(dateTo.getTime() + 86400000),
+                ),
             },
         });
 

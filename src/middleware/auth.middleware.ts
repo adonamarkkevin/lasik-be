@@ -61,7 +61,6 @@ export const adminCheck = async (
     const userFound = req.user;
     const dept = userFound.department;
     let admin = [1, 5]; // 1 = Super Admin, 2 = Admin
-    console.log(dept);
 
     if (admin.indexOf(dept.id) > -1) {
         return next();
@@ -81,7 +80,6 @@ export const doctorCheck = async (
     const userFound = req.user;
     const dept = userFound.department;
     let doctor = [12]; // 12 = Doctor. Placed it on array just in case another user type can use doctor's resources
-    console.log(dept);
 
     if (doctor.indexOf(dept.id) > -1) {
         return next();
