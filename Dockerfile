@@ -17,6 +17,6 @@ RUN yarn build
 
 ENV NODE_ENV development
 
-EXPOSE 4545
+EXPOSE 3006
 
 CMD ["node", "dist/index.js"]
