@@ -18,9 +18,6 @@ export class ThirdParty extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: true })
-    type: string;
-
     @Column()
     third_party_code: string;
 
@@ -45,10 +42,10 @@ export class ThirdParty extends BaseEntity {
     @Column({ nullable: true })
     contact_person2: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "date", nullable: true })
     contract_date: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "date", nullable: true })
     contract_exp: string;
 
     @CreateDateColumn()

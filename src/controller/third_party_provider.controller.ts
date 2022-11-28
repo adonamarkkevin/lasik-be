@@ -5,6 +5,7 @@ import {
     deleteTpp,
     getTppById,
     getTppByKey,
+    relatePatienClass,
     updateTpp,
 } from "../service/third_party_provider.service";
 
@@ -30,7 +31,8 @@ export const insertTpp = async (req: Request, res: Response) => {
             });
         }
 
-        await createTpp(reqBody);
+        const tpp = await createTpp(reqBody);
+        await relatePatienClass(tpp.id, reqBody.pClassId);
 
         return res.send({
             status: "Success",

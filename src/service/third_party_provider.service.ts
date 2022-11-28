@@ -2,7 +2,6 @@ import { ThirdParty } from "../entity/third_party_provider.entity";
 
 export const createTpp = async (tppBody: any) => {
     const newTpp = new ThirdParty();
-    newTpp.type = tppBody.type;
     newTpp.third_party_code = tppBody.third_party_code;
     newTpp.name = tppBody.name;
     newTpp.tel_no = tppBody.tel_no;
@@ -20,7 +19,6 @@ export const createTpp = async (tppBody: any) => {
 };
 
 export const updateTpp = async (tppFound: any, tppBody: any) => {
-    tppFound.type = tppBody.type;
     tppFound.third_party_code = tppBody.third_party_code;
     tppFound.name = tppBody.name;
     tppFound.tel_no = tppBody.tel_no;
