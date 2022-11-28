@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Between, Not } from "typeorm";
 import { Queue } from "../entity/queue.entity";
 import { QueueInternal } from "../entity/queue_internal.entity";
 import { TransactionInfo } from "../entity/transaction_info.entity";
@@ -291,7 +292,9 @@ export const processTrans = async (req: Request, res: Response) => {
         const reqBody = req.body;
         const userFound = req.user;
         const clinic = userFound.clinic;
-        const transFound = await getTransactionById(parseInt(transId));
+        const transFound = await getTransactionById(parseInt(transId), [
+            "patient_class",
+        ]);
 
         if (!transFound) {
             return res.status(404).send({
@@ -303,7 +306,7 @@ export const processTrans = async (req: Request, res: Response) => {
         let billing = [4, 5];
 
         reqBody.transaction_type =
-            billing.indexOf(reqBody.pClassId) > -1
+            billing.indexOf(transFound.patient_class.id) > -1
                 ? "billing"
                 : "sales invoice";
         reqBody.invoice_number = await invoiceNumber(clinic.id);
@@ -313,10 +316,6 @@ export const processTrans = async (req: Request, res: Response) => {
         let internalQnum = await srvcQueueNumber(clinic.hosp_code);
         let q = await Queue.create({
             queue_number: qNum,
-        }).save();
-
-        let internalQ = await QueueInternal.create({
-            queue_number: internalQnum,
         }).save();
 
         await addQueueTransaction(updatedTrans.id, q.id);
@@ -329,6 +328,9 @@ export const processTrans = async (req: Request, res: Response) => {
                 const packageSrvc = packageObj.transaction_service;
                 for (let i = 0; i < packageSrvc.length; i++) {
                     const service = packageSrvc[i];
+                    let internalQ = await QueueInternal.create({
+                        queue_number: internalQnum,
+                    }).save();
                     await addServiceQueue(service.id, internalQ.id);
                 }
             }
@@ -336,6 +338,9 @@ export const processTrans = async (req: Request, res: Response) => {
         if (serviceArr !== null) {
             for (let i = 0; i < serviceArr.length; i++) {
                 const serviceObj = serviceArr[i];
+                let internalQ = await QueueInternal.create({
+                    queue_number: internalQnum,
+                }).save();
                 await addServiceQueue(serviceObj.id, internalQ.id);
             }
         }
@@ -344,6 +349,73 @@ export const processTrans = async (req: Request, res: Response) => {
             status: "Success",
             message: "Transaction Process Successful",
             data: updatedTrans,
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: `Server Error`,
+            message: `Please contact administrator`,
+            error: error.message,
+        });
+    }
+};
+
+export const viewBillSummaryPerDate = async (req: Request, res: Response) => {
+    try {
+        const { date_from, date_to } = req.body;
+        const userFound = req.body;
+        const clinic = userFound.clinic;
+        const dateAfter = new Date(date_to).getDate() + 1;
+        const dateFrom = new Date(date_from);
+        const dateTo = new Date(dateAfter);
+
+        const [allBilling, count] = await TransactionInfo.findAndCount({
+            where: {
+                clinic: {
+                    id: clinic.id,
+                },
+                transaction_type: "billing",
+                created_at: Between(dateFrom, dateTo),
+            },
+        });
+
+        return res.send({
+            data: allBilling,
+            count: count,
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: `Server Error`,
+            message: `Please contact administrator`,
+            error: error.message,
+        });
+    }
+};
+
+export const viewInvoiceSummaryPerDate = async (
+    req: Request,
+    res: Response,
+) => {
+    try {
+        const { date_from, date_to } = req.body;
+        const userFound = req.body;
+        const clinic = userFound.clinic;
+        const dateAfter = new Date(date_to).getDate() + 1;
+        const dateFrom = new Date(date_from);
+        const dateTo = new Date(dateAfter);
+
+        const [allInvoice, count] = await TransactionInfo.findAndCount({
+            where: {
+                clinic: {
+                    id: clinic.id,
+                },
+                transaction_type: Not("billing"),
+                created_at: Between(dateFrom, dateTo),
+            },
+        });
+
+        return res.send({
+            data: allInvoice,
+            count: count,
         });
     } catch (error) {
         return res.status(500).send({

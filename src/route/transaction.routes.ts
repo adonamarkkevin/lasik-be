@@ -6,6 +6,8 @@ import {
     updateTransPckg,
     updateTransSrvc,
     viewAllTransaction,
+    viewBillSummaryPerDate,
+    viewInvoiceSummaryPerDate,
     viewTransPkcg,
     viewTransSvc,
 } from "../controller/transaction.controller";
@@ -60,4 +62,16 @@ transRoutes.get(
     checkToken,
     adminCheck,
     viewTransSvc,
+);
+transRoutes.post(
+    "/transaction/view-all/billing",
+    checkToken,
+    adminCheck,
+    viewBillSummaryPerDate,
+);
+transRoutes.post(
+    "/transaction/view-all/invoice",
+    checkToken,
+    adminCheck,
+    viewInvoiceSummaryPerDate,
 );
