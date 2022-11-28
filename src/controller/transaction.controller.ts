@@ -1,13 +1,21 @@
 import { Request, Response } from "express";
 import { Queue } from "../entity/queue.entity";
+import { QueueInternal } from "../entity/queue_internal.entity";
 import { TransactionInfo } from "../entity/transaction_info.entity";
-import { queueNumber, transRefCode } from "../helper/ref_number.help";
+import {
+    invoiceNumber,
+    queueNumber,
+    srvcQueueNumber,
+    transRefCode,
+} from "../helper/ref_number.help";
 import { getPackageById } from "../service/packages.service";
 import { getServiceById } from "../service/services.service";
 import {
     addBranchTransaction,
     addPackageTransaction,
     addPatientTransaction,
+    addPatietClassTransaction,
+    addQueueTransaction,
     addServiceTransaction,
     createTransaction,
     deleteTransaction,
@@ -20,6 +28,7 @@ import {
     updateTransactionPackage,
 } from "../service/transaction_packages.service";
 import {
+    addServiceQueue,
     createTransactionService,
     getTransactionServiceById,
     updateTransactionService,
@@ -40,9 +49,17 @@ export const insertTransaction = async (req: Request, res: Response) => {
             });
         }
 
+        if (reqBody.pClassId === undefined) {
+            return res.status(403).send({
+                status: "Bad Request",
+                message: "Patient Class ID is required",
+            });
+        }
+
         const transaction = await createTransaction(reqBody);
         await addBranchTransaction(transaction.id, userBranch.id);
         await addPatientTransaction(transaction.id, reqBody.patientId);
+        await addPatietClassTransaction(transaction.id, reqBody.pClassId);
 
         const packageIdArr = reqBody.package;
         const serviceIdArr = reqBody.service;
@@ -64,6 +81,7 @@ export const insertTransaction = async (req: Request, res: Response) => {
             for (let i = 0; i < serviceIdArr.length; i++) {
                 const srvcId = serviceIdArr[i];
                 const srvcFound = await getServiceById(parseInt(srvcId));
+                delete srvcFound.id;
                 const transSrvc = await createTransactionService(srvcFound);
                 await addServiceTransaction(transaction, transSrvc);
             }
@@ -85,7 +103,7 @@ export const insertTransaction = async (req: Request, res: Response) => {
 export const viewTransPkcg = async (req: Request, res: Response) => {
     try {
         const { pckgId } = req.params;
-        const pckgRelation = ["service"];
+        const pckgRelation = ["transaction_service"];
         const pckgFound = await getTransactionPackageById(
             parseInt(pckgId),
             pckgRelation,
@@ -112,7 +130,7 @@ export const updateTransPckg = async (req: Request, res: Response) => {
     try {
         const { pckgId } = req.params;
         const reqBody = req.body;
-        const pckgRelation = ["service"];
+        const pckgRelation = ["transaction_service"];
         const pckgFound = await getTransactionPackageById(
             parseInt(pckgId),
             pckgRelation,
@@ -122,6 +140,14 @@ export const updateTransPckg = async (req: Request, res: Response) => {
             return res.status(404).send({
                 status: "Not Found",
                 message: "Transaction package does not exist.",
+            });
+        }
+
+        if (reqBody.service !== undefined) {
+            return res.status(403).send({
+                status: "Bad Request",
+                message:
+                    "Transaction Service cannot be updated unde transaction Package.",
             });
         }
 
@@ -149,7 +175,7 @@ export const viewTransSvc = async (req: Request, res: Response) => {
         if (!srvcFound) {
             return res.status(404).send({
                 status: "Not Found",
-                message: "Transaction package does not exist.",
+                message: "Transaction service does not exist.",
             });
         }
 
@@ -207,7 +233,7 @@ export const removeTrans = async (req: Request, res: Response) => {
         if (!transFound) {
             return res.status(404).send({
                 status: "Not Found",
-                message: "Transaction package does not exist.",
+                message: "Transaction does not exist.",
             });
         }
 
@@ -274,11 +300,45 @@ export const processTrans = async (req: Request, res: Response) => {
             });
         }
 
+        let billing = [4, 5];
+
+        reqBody.transaction_type =
+            billing.indexOf(reqBody.pClassId) > -1
+                ? "billing"
+                : "sales invoice";
+        reqBody.invoice_number = await invoiceNumber(clinic.id);
+
         const updatedTrans = await updateTransaction(transFound, reqBody);
         let qNum = await queueNumber(clinic.hosp_code);
-        await Queue.create({
+        let internalQnum = await srvcQueueNumber(clinic.hosp_code);
+        let q = await Queue.create({
             queue_number: qNum,
         }).save();
+
+        let internalQ = await QueueInternal.create({
+            queue_number: internalQnum,
+        }).save();
+
+        await addQueueTransaction(updatedTrans.id, q.id);
+
+        const packageArr = transFound.transaction_package;
+        const serviceArr = transFound.transaction_service;
+        if (packageArr !== null) {
+            for (let i = 0; i < packageArr.length; i++) {
+                const packageObj = packageArr[i];
+                const packageSrvc = packageObj.transaction_service;
+                for (let i = 0; i < packageSrvc.length; i++) {
+                    const service = packageSrvc[i];
+                    await addServiceQueue(service.id, internalQ.id);
+                }
+            }
+        }
+        if (serviceArr !== null) {
+            for (let i = 0; i < serviceArr.length; i++) {
+                const serviceObj = serviceArr[i];
+                await addServiceQueue(serviceObj.id, internalQ.id);
+            }
+        }
 
         return res.send({
             status: "Success",

@@ -9,6 +9,7 @@ import {
     OneToMany,
 } from "typeorm";
 import { ThirdParty } from "./third_party_provider.entity";
+import { TransactionInfo } from "./transaction_info.entity";
 
 @Entity({ name: "patient_classes" })
 export class PatientClass extends BaseEntity {
@@ -32,4 +33,7 @@ export class PatientClass extends BaseEntity {
 
     @OneToMany(() => ThirdParty, (tpp) => tpp.patient_class)
     tpp: ThirdParty[];
+
+    @OneToMany(() => TransactionInfo, (t) => t.patient_class)
+    transaction_info: TransactionInfo[];
 }

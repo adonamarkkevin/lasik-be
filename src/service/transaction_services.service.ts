@@ -21,7 +21,9 @@ export const updateTransactionService = async (
     serviceFound.code = service.code;
     serviceFound.price = service.price;
     serviceFound.doctor_share = service.doctor_share;
-
+    serviceFound.professional_share = service.professional_share;
+    serviceFound.amount_paid = service.amount_paid;
+    serviceFound.discount_amount = service.discount_amount;
     await TransactionService.save(serviceFound);
     return serviceFound;
 };
@@ -85,5 +87,20 @@ export const removePckgTransRelation = async (
         .relation("transaction_package")
         .of(transSrvcFound)
         .remove(transPckgFound);
+    return;
+};
+
+export const addServiceQueue = async (serviceId: number, queueId: number) => {
+    if (queueId === 0) {
+        await TransactionService.createQueryBuilder()
+            .relation("queue_internal")
+            .of(serviceId)
+            .set(null);
+        return;
+    }
+    await TransactionService.createQueryBuilder()
+        .relation("queue_internal")
+        .of(serviceId)
+        .set(queueId);
     return;
 };

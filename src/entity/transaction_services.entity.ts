@@ -9,7 +9,9 @@ import {
     ManyToOne,
     JoinColumn,
     ManyToMany,
+    OneToOne,
 } from "typeorm";
+import { QueueInternal } from "./queue_internal.entity";
 import { TransactionInfo } from "./transaction_info.entity";
 import { TransactionPackage } from "./transaction_packages.entity";
 import { UserInfo } from "./user_info.entity";
@@ -69,4 +71,7 @@ export class TransactionService extends BaseEntity {
         (transPckg) => transPckg.transaction_service,
     )
     transaction_package: TransactionPackage[];
+
+    @OneToOne(() => QueueInternal, (q) => q.transaction_service)
+    queue_internal: QueueInternal;
 }

@@ -13,6 +13,7 @@ import {
     ManyToOne,
 } from "typeorm";
 import { Clinic } from "./clinic_branch.entity";
+import { PatientClass } from "./patient_class.entity";
 import { Queue } from "./queue.entity";
 import { ThirdParty } from "./third_party_provider.entity";
 import { TransactionPackage } from "./transaction_packages.entity";
@@ -37,7 +38,7 @@ export class TransactionInfo extends BaseEntity {
     @Column()
     referrence_num: string;
 
-    @Column()
+    @Column({ nullable: true })
     transaction_type: string;
 
     @Column({ nullable: true })
@@ -52,8 +53,8 @@ export class TransactionInfo extends BaseEntity {
     @Column({ nullable: true })
     invoice_number: string;
 
-    @Column({ type: "enum", enum: PaymentType, nullable: true })
-    payment_type: PaymentType;
+    @Column({ nullable: true })
+    payment_type: string;
 
     @Column({ type: "bigint", nullable: true })
     paid_amount: number;
@@ -97,6 +98,9 @@ export class TransactionInfo extends BaseEntity {
     @Column({ nullable: true })
     payment_date: string;
 
+    @Column({ nullable: true })
+    remarks: string;
+
     @Column({ type: "bigint", nullable: true })
     total: number;
 
@@ -120,7 +124,7 @@ export class TransactionInfo extends BaseEntity {
     @ManyToMany(
         () => TransactionPackage,
         (transpack) => transpack.transaction_info,
-        { cascade: true, onDelete: "CASCADE", eager: true },
+        { cascade: ["soft-remove"], onDelete: "CASCADE", eager: true },
     )
     @JoinTable({ name: "jointbl_transactions_packages" })
     transaction_package: TransactionPackage[];
@@ -139,4 +143,8 @@ export class TransactionInfo extends BaseEntity {
 
     @OneToOne(() => Queue, (q) => q.transaction_info)
     queue: Queue;
+
+    @ManyToOne(() => PatientClass, (c) => c.transaction_info)
+    @JoinColumn({ name: "patient_class_id" })
+    patient_class: PatientClass;
 }

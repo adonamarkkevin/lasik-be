@@ -23,6 +23,7 @@ export const createTransaction = async (transaction: any) => {
     newTransaction.payment_date = transaction.payment_date;
     newTransaction.bill_ease_order_id = transaction.bill_ease_order_id;
     newTransaction.total = transaction.total;
+    newTransaction.remarks = transaction.remarks;
 
     await TransactionInfo.save(newTransaction);
 
@@ -159,5 +160,38 @@ export const addBranchTransaction = async (
         .relation("clinic")
         .of(transId)
         .set(clinicId);
+    return;
+};
+
+export const addPatietClassTransaction = async (
+    transId: number,
+    pClassId: number,
+) => {
+    if (pClassId === 0) {
+        await TransactionInfo.createQueryBuilder()
+            .relation("patient_class")
+            .of(transId)
+            .set(null);
+        return;
+    }
+    await TransactionInfo.createQueryBuilder()
+        .relation("patient_class")
+        .of(transId)
+        .set(pClassId);
+    return;
+};
+
+export const addQueueTransaction = async (transId: number, queueId: number) => {
+    if (queueId === 0) {
+        await TransactionInfo.createQueryBuilder()
+            .relation("patient_class")
+            .of(transId)
+            .set(null);
+        return;
+    }
+    await TransactionInfo.createQueryBuilder()
+        .relation("queue")
+        .of(transId)
+        .set(queueId);
     return;
 };
