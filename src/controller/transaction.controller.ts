@@ -277,6 +277,7 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
                           "clinic",
                           "patient_class",
                       ],
+                      order: { created_at: "DESC" },
                   })
                 : await TransactionInfo.findAndCount({
                       relations: [
@@ -290,6 +291,7 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
                           "clinic",
                           "patient_class",
                       ],
+                      order: { created_at: "DESC" },
                   });
 
         return res.send({
@@ -424,6 +426,7 @@ export const viewBillSummaryPerDate = async (req: Request, res: Response) => {
                           "clinic",
                           "patient_class",
                       ],
+                      order: { created_at: "DESC" },
                   })
                 : await TransactionInfo.findAndCount({
                       where: {
@@ -446,6 +449,7 @@ export const viewBillSummaryPerDate = async (req: Request, res: Response) => {
                           "clinic",
                           "patient_class",
                       ],
+                      order: { created_at: "DESC" },
                   });
 
         return res.send({
@@ -493,6 +497,7 @@ export const viewInvoiceSummaryPerDate = async (
                           "clinic",
                           "patient_class",
                       ],
+                      order: { created_at: "DESC" },
                   })
                 : await TransactionInfo.findAndCount({
                       where: {
@@ -515,6 +520,7 @@ export const viewInvoiceSummaryPerDate = async (
                           "clinic",
                           "patient_class",
                       ],
+                      order: { created_at: "DESC" },
                   });
 
         return res.send({
