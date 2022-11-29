@@ -257,21 +257,40 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
     try {
         const userFound = req.user;
         const clinic = userFound.clinic;
-        const [allTrans, count] = await TransactionInfo.findAndCount({
-            where: {
-                clinic: {
-                    id: clinic.id,
-                },
-            },
-            relations: [
-                "third_party_provider",
-                "patient",
-                "transaction_package",
-                "transaction_package.transaction_service",
-                "transaction_service",
-                "clinic",
-            ],
-        });
+        const department = userFound.department;
+        const [allTrans, count] =
+            department.id !== 1
+                ? await TransactionInfo.findAndCount({
+                      where: {
+                          clinic: {
+                              id: clinic.id,
+                          },
+                      },
+                      relations: [
+                          "third_party_provider",
+                          "patient",
+                          "transaction_package",
+                          "transaction_package.transaction_service",
+                          "transaction_package.transaction_service.assigned_doctor",
+                          "transaction_service",
+                          "transaction_service.assigned_doctor",
+                          "clinic",
+                          "patient_class",
+                      ],
+                  })
+                : await TransactionInfo.findAndCount({
+                      relations: [
+                          "third_party_provider",
+                          "patient",
+                          "transaction_package",
+                          "transaction_package.transaction_service",
+                          "transaction_package.transaction_service.assigned_doctor",
+                          "transaction_service",
+                          "transaction_service.assigned_doctor",
+                          "clinic",
+                          "patient_class",
+                      ],
+                  });
 
         return res.send({
             data: allTrans,
@@ -378,26 +397,56 @@ export const viewBillSummaryPerDate = async (req: Request, res: Response) => {
         const { date_from, date_to } = req.body;
         const userFound = req.user;
         const clinic = userFound.clinic;
+        const department = userFound.department;
         const dateAfter = new Date(date_to).getDate() + 2;
 
         console.log(dateAfter);
         const dateFrom = new Date(date_from);
         const dateTo = new Date(date_to);
 
-        console.log(dateFrom, dateTo);
-
-        const [allBilling, count] = await TransactionInfo.findAndCount({
-            where: {
-                clinic: {
-                    id: clinic.id,
-                },
-                transaction_type: "billing",
-                created_at: Between(
-                    dateFrom,
-                    new Date(dateTo.getTime() + 86400000), // +1 day since date start at 12am
-                ),
-            },
-        });
+        const [allBilling, count] =
+            department.id === 1
+                ? await TransactionInfo.findAndCount({
+                      where: {
+                          transaction_type: "billing",
+                          created_at: Between(
+                              dateFrom,
+                              new Date(dateTo.getTime() + 86400000), // +1 day since date start at 12am
+                          ),
+                      },
+                      relations: [
+                          "patient",
+                          "transaction_package",
+                          "transaction_package.transaction_service",
+                          "transaction_package.transaction_service.assigned_doctor",
+                          "transaction_service",
+                          "transaction_service.assigned_doctor",
+                          "clinic",
+                          "patient_class",
+                      ],
+                  })
+                : await TransactionInfo.findAndCount({
+                      where: {
+                          clinic: {
+                              id: clinic.id,
+                          },
+                          transaction_type: "billing",
+                          created_at: Between(
+                              dateFrom,
+                              new Date(dateTo.getTime() + 86400000), // +1 day since date start at 12am
+                          ),
+                      },
+                      relations: [
+                          "patient",
+                          "transaction_package",
+                          "transaction_package.transaction_service",
+                          "transaction_package.transaction_service.assigned_doctor",
+                          "transaction_service",
+                          "transaction_service.assigned_doctor",
+                          "clinic",
+                          "patient_class",
+                      ],
+                  });
 
         return res.send({
             data: allBilling,
@@ -420,21 +469,53 @@ export const viewInvoiceSummaryPerDate = async (
         const { date_from, date_to } = req.body;
         const userFound = req.user;
         const clinic = userFound.clinic;
+        const department = userFound.department;
         const dateTo = new Date(date_to);
         const dateFrom = new Date(date_from);
 
-        const [allInvoice, count] = await TransactionInfo.findAndCount({
-            where: {
-                clinic: {
-                    id: clinic.id,
-                },
-                transaction_type: Not("billing"),
-                created_at: Between(
-                    dateFrom,
-                    new Date(dateTo.getTime() + 86400000),
-                ),
-            },
-        });
+        const [allInvoice, count] =
+            department.id === 1
+                ? await TransactionInfo.findAndCount({
+                      where: {
+                          transaction_type: Not("billing"),
+                          created_at: Between(
+                              dateFrom,
+                              new Date(dateTo.getTime() + 86400000), // +1 day since date start at 12am
+                          ),
+                      },
+                      relations: [
+                          "patient",
+                          "transaction_package",
+                          "transaction_package.transaction_service",
+                          "transaction_package.transaction_service.assigned_doctor",
+                          "transaction_service",
+                          "transaction_service.assigned_doctor",
+                          "clinic",
+                          "patient_class",
+                      ],
+                  })
+                : await TransactionInfo.findAndCount({
+                      where: {
+                          clinic: {
+                              id: clinic.id,
+                          },
+                          transaction_type: Not("billing"),
+                          created_at: Between(
+                              dateFrom,
+                              new Date(dateTo.getTime() + 86400000), // +1 day since date start at 12am
+                          ),
+                      },
+                      relations: [
+                          "patient",
+                          "transaction_package",
+                          "transaction_package.transaction_service",
+                          "transaction_package.transaction_service.assigned_doctor",
+                          "transaction_service",
+                          "transaction_service.assigned_doctor",
+                          "clinic",
+                          "patient_class",
+                      ],
+                  });
 
         return res.send({
             data: allInvoice,

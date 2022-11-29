@@ -56,6 +56,7 @@ export class TransactionService extends BaseEntity {
     @ManyToOne(
         () => UserInfo,
         (assignedDoctor) => assignedDoctor.assigned_service,
+        { eager: true },
     )
     @JoinColumn({ name: "doctor_id" })
     assigned_doctor: UserInfo;

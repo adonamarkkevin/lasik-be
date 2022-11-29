@@ -7,3 +7,4 @@ export const refCodeDate = () => {
     const refDate = date.format(Date.now());
     return refDate.replace(/\//g, ""); // Output: 111222
 };
+
