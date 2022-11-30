@@ -163,3 +163,51 @@ export const assignDoctorOnQ = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const updateQueueStatus = async (req: Request, res: Response) => {
+    try {
+        const { queue_id } = req.params;
+        const { status } = req.body;
+        const queueFound = await Queue.findOne({
+            where: { id: parseInt(queue_id) },
+        });
+        if (!queueFound) {
+            return res.status(404).send({
+                status: "Not Found",
+                message: "Queue not found",
+            });
+        }
+        queueFound.queue_status = status;
+        await Queue.save(queueFound);
+    } catch (error) {
+        return res.status(401).send({
+            status: `Server Error`,
+            message: `Please contact administrator`,
+            error: error.message,
+        });
+    }
+};
+
+export const updateInternalQ = async (req: Request, res: Response) => {
+    try {
+        const { queue_id } = req.params;
+        const { status } = req.body;
+        const queueFound = await QueueInternal.findOne({
+            where: { id: parseInt(queue_id) },
+        });
+        if (!queueFound) {
+            return res.status(404).send({
+                status: "Not Found",
+                message: "Queue not found",
+            });
+        }
+        queueFound.queue_status = status;
+        await QueueInternal.save(queueFound);
+    } catch (error) {
+        return res.status(401).send({
+            status: `Server Error`,
+            message: `Please contact administrator`,
+            error: error.message,
+        });
+    }
+};

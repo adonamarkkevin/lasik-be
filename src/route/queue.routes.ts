@@ -3,6 +3,8 @@ import {
     assignDoctorOnQ,
     clearAllInternalQ,
     clearQueue,
+    updateInternalQ,
+    updateQueueStatus,
     viewAllInternalQ,
     viewAllQueue,
 } from "../controller/queue.controller";
@@ -34,4 +36,16 @@ queueRoutes.put(
     checkToken,
     doctorCheck,
     assignDoctorOnQ,
+);
+queueRoutes.put(
+    "/queue/update/:queue_id",
+    checkToken,
+    adminCheck,
+    updateQueueStatus,
+);
+queueRoutes.put(
+    "/queue/internal/update/:queue_id",
+    checkToken,
+    adminCheck,
+    updateInternalQ,
 );
