@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Like } from "typeorm";
 import { Queue } from "../entity/queue.entity";
 import { QueueInternal } from "../entity/queue_internal.entity";
 import { assignDoctor } from "../service/transaction_services.service";
@@ -78,14 +79,9 @@ export const viewAllInternalQ = async (req: Request, res: Response) => {
 
         let [allQ, count] = await QueueInternal.findAndCount({
             where: {
-                transaction_service: {
-                    transaction_info: {
-                        clinic: {
-                            id: clinic.id,
-                        },
-                    },
-                },
+                queue_number: Like(`%${clinic.hosp_code}%`),
             },
+
             order: {
                 created_at: "DESC",
             },
