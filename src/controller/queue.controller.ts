@@ -179,6 +179,10 @@ export const updateQueueStatus = async (req: Request, res: Response) => {
         }
         queueFound.queue_status = status;
         await Queue.save(queueFound);
+        return res.send({
+            status: "Success",
+            message: "Queue Status Update Successfull",
+        });
     } catch (error) {
         return res.status(401).send({
             status: `Server Error`,
@@ -203,6 +207,10 @@ export const updateInternalQ = async (req: Request, res: Response) => {
         }
         queueFound.queue_status = status;
         await QueueInternal.save(queueFound);
+        return res.send({
+            status: "Success",
+            message: "Queue Status Update Successfull",
+        });
     } catch (error) {
         return res.status(401).send({
             status: `Server Error`,
