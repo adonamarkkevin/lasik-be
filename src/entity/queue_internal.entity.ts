@@ -35,3 +35,4 @@ export class QueueInternal extends BaseEntity {
     @JoinColumn({ name: "service_id" })
     transaction_service: TransactionService;
 }
+            

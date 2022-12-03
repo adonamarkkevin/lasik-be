@@ -39,6 +39,15 @@ export const updateUser = async (userInfo: any, user: any) => {
     userInfo.birthday = user.birthday;
     userInfo.address = user.address;
     userInfo.contact = user.contact;
+    userInfo.license_number = user.license_number;
+    userInfo.licence_start = user.licence_start;
+    userInfo.license_expires_in = user.license_expires_in;
+    userInfo.ptr_no = user.ptr_no;
+    userInfo.ptr_eff_date = user.ptr_eff_date;
+    userInfo.ptr_exp_date = user.ptr_exp_date;
+    userInfo.s2_no = user.s2_no;
+    userInfo.s2_eff_date = user.s2_eff_date;
+    userInfo.s2_exp_date = user.s2_exp_date;
 
     if (user.password !== undefined) {
         userInfo.password = await hash(

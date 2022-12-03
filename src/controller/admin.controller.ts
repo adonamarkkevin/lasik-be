@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { In, Not } from "typeorm";
 import { UserInfo } from "../entity/user_info.entity";
 import {
     assignClinic,
@@ -134,6 +135,65 @@ export const viewAllUser = async (req: Request, res: Response) => {
             relations: ["department"],
         });
 
+        return res.send({
+            data: allUser,
+            count: count,
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: `Server Error`,
+            message: `Please contact administrator`,
+            error: error.message,
+        });
+    }
+};
+
+export const viewUserPerRole = async (req: Request, res: Response) => {
+    try {
+        const { role } = req.params;
+        const clinic = req.user.clinic;
+        const [allUser, count] =
+            clinic !== null // null clinic === super admin. No clinic or branch means super admin can see all doctors/employees on any branch
+                ? role === "doctor"
+                    ? await UserInfo.findAndCount({
+                          where: {
+                              department: {
+                                  id: 12,
+                              },
+                              clinic: {
+                                  id: clinic.id,
+                              },
+                          },
+                          relations: ["department", "clinic"],
+                      })
+                    : await UserInfo.findAndCount({
+                          where: {
+                              department: {
+                                  id: Not(In([12, 1, 2])),
+                              },
+                              clinic: {
+                                  id: clinic.id,
+                              },
+                          },
+                          relations: ["department", "clinic"],
+                      })
+                : role === "doctor"
+                ? await UserInfo.findAndCount({
+                      where: {
+                          department: {
+                              id: 12,
+                          },
+                      },
+                      relations: ["department", "clinic"],
+                  })
+                : await UserInfo.findAndCount({
+                      where: {
+                          department: {
+                              id: Not(In([12, 1, 2])),
+                          },
+                      },
+                      relations: ["department", "clinic"],
+                  });
         return res.send({
             data: allUser,
             count: count,

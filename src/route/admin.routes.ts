@@ -5,6 +5,7 @@ import {
     rmLasikUser,
     updateLasikUser,
     viewAllUser,
+    viewUserPerRole,
 } from "../controller/admin.controller";
 import { adminCheck, checkToken } from "../middleware/auth.middleware";
 
@@ -20,3 +21,4 @@ adminRoutes.delete(
     adminCheck,
     rmLasikUser,
 );
+adminRoutes.get("/user/view-per-role/:role/", checkToken, viewUserPerRole);
