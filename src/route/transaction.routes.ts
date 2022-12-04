@@ -27,12 +27,7 @@ transRoutes.put(
     adminCheck,
     processTrans,
 );
-transRoutes.get(
-    "/transaction/view-all",
-    checkToken,
-    adminCheck,
-    viewAllTransaction,
-);
+transRoutes.get("/transaction/view-all", checkToken, viewAllTransaction);
 transRoutes.delete(
     "/transaction/remove/:transId",
     checkToken,
