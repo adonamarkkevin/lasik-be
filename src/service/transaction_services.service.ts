@@ -21,6 +21,7 @@ export const updateTransactionService = async (
     serviceFound.code = service.code;
     serviceFound.price = service.price;
     serviceFound.doctor_share = service.doctor_share;
+    serviceFound.facility_fee = service.facility_fee;
     serviceFound.professional_share = service.professional_share;
     serviceFound.amount_paid = service.amount_paid;
     serviceFound.discount_amount = service.discount_amount;
