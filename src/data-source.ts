@@ -13,6 +13,7 @@ import { PatientClass } from "./entity/patient_class.entity";
 import { TransactionInfo } from "./entity/transaction_info.entity";
 import { Queue } from "./entity/queue.entity";
 import { QueueInternal } from "./entity/queue_internal.entity";
+import { Discount } from "./entity/discount.entity";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -37,6 +38,7 @@ export const AppDataSource = new DataSource({
         PatientClass,
         Queue,
         QueueInternal,
+        Discount,
     ],
     // migrations: [],
     // subscribers: [],
