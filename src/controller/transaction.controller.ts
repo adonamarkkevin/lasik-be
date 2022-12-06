@@ -605,6 +605,13 @@ export const viewAllVoid = async (req: Request, res: Response) => {
     try {
         const userFound = req.user;
         const clinic = userFound.clinic;
+        const { transaction_type } = req.params;
+        const transClass = {
+            billing: [5],
+            invoice: [1, 2, 3, 4, 6],
+        };
+
+        const transWhere = transClass[transaction_type];
 
         const [allVoid, count] =
             clinic.id === 1
@@ -617,6 +624,9 @@ export const viewAllVoid = async (req: Request, res: Response) => {
                           deleted_at: Not(IsNull()),
                           clinic: {
                               id: clinic.id,
+                          },
+                          patient_class: {
+                              id: In(transWhere),
                           },
                       },
                       withDeleted: true,

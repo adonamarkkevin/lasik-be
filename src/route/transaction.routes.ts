@@ -75,4 +75,9 @@ transRoutes.post(
     adminCheck,
     viewInvoiceSummaryPerDate,
 );
-transRoutes.get("/transaction/view-void/", checkToken, adminCheck, viewAllVoid);
+transRoutes.get(
+    "/transaction/view-void/:transaction_type",
+    checkToken,
+    adminCheck,
+    viewAllVoid,
+);
