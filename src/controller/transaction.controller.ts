@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Between, Not } from "typeorm";
+import { Between, In, IsNull, Not } from "typeorm";
 import { Queue } from "../entity/queue.entity";
 import { QueueInternal } from "../entity/queue_internal.entity";
 import { TransactionInfo } from "../entity/transaction_info.entity";
@@ -256,16 +256,65 @@ export const removeTrans = async (req: Request, res: Response) => {
 export const viewAllTransaction = async (req: Request, res: Response) => {
     try {
         const userFound = req.user;
+        const { transaction_type } = req.params;
         const clinic = userFound.clinic;
         const department = userFound.department;
+
+        const transClass = {
+            billing: [5],
+            invoice: [1, 2, 3, 4, 6],
+            visit: [],
+        };
+
+        const transWhere = transClass[transaction_type];
+
         const [allTrans, count] =
             department.id !== 1
-                ? await TransactionInfo.findAndCount({
-                      where: {
-                          clinic: {
-                              id: clinic.id,
+                ? transaction_type == "visit"
+                    ? await TransactionInfo.findAndCount({
+                          where: {
+                              clinic: {
+                                  id: clinic.id,
+                              },
                           },
-                      },
+                          relations: [
+                              "third_party_provider",
+                              "patient",
+                              "transaction_package",
+                              "transaction_package.transaction_service",
+                              "transaction_package.transaction_service.assigned_doctor",
+                              "transaction_service",
+                              "transaction_service.assigned_doctor",
+                              "clinic",
+                              "patient_class",
+                          ],
+                          order: { created_at: "DESC" },
+                      })
+                    : await TransactionInfo.findAndCount({
+                          where: {
+                              clinic: {
+                                  id: clinic.id,
+                              },
+                              patient_class: {
+                                  id: In(transWhere),
+                              },
+                              transaction_type: Not(IsNull()),
+                          },
+                          relations: [
+                              "third_party_provider",
+                              "patient",
+                              "transaction_package",
+                              "transaction_package.transaction_service",
+                              "transaction_package.transaction_service.assigned_doctor",
+                              "transaction_service",
+                              "transaction_service.assigned_doctor",
+                              "clinic",
+                              "patient_class",
+                          ],
+                          order: { created_at: "DESC" },
+                      })
+                : transaction_type == "visit"
+                ? await TransactionInfo.findAndCount({
                       relations: [
                           "third_party_provider",
                           "patient",
@@ -280,6 +329,11 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
                       order: { created_at: "DESC" },
                   })
                 : await TransactionInfo.findAndCount({
+                      where: {
+                          patient_class: {
+                              id: In(transWhere),
+                          },
+                      },
                       relations: [
                           "third_party_provider",
                           "patient",
