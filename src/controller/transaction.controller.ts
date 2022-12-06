@@ -608,7 +608,7 @@ export const viewAllVoid = async (req: Request, res: Response) => {
 
         const [allVoid, count] =
             clinic.id === 1
-                ? await TransactionInfo.find({
+                ? await TransactionInfo.findAndCount({
                       where: { deleted_at: Not(IsNull()) },
                       withDeleted: true,
                   })
