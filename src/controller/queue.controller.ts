@@ -88,6 +88,7 @@ export const viewAllInternalQ = async (req: Request, res: Response) => {
             relations: [
                 "transaction_service",
                 "transaction_service.assigned_doctor",
+                "patient",
             ],
         });
 

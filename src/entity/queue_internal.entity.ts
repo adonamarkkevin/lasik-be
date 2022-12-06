@@ -10,6 +10,7 @@ import {
     JoinColumn,
 } from "typeorm";
 import { TransactionService } from "./transaction_services.entity";
+import { UserInfo } from "./user_info.entity";
 
 @Entity({ name: "queue_internal" })
 export class QueueInternal extends BaseEntity {
@@ -34,5 +35,8 @@ export class QueueInternal extends BaseEntity {
     @OneToOne(() => TransactionService, (ts) => ts.queue_internal)
     @JoinColumn({ name: "service_id" })
     transaction_service: TransactionService;
+
+    @OneToOne(() => UserInfo, (user) => user.queue_internal)
+    @JoinColumn({ name: "patient_id" })
+    patient: UserInfo;
 }
-            

@@ -9,9 +9,11 @@ import {
     ManyToOne,
     JoinColumn,
     OneToMany,
+    OneToOne,
 } from "typeorm";
 import { Clinic } from "./clinic_branch.entity";
 import { Department } from "./department.entity";
+import { QueueInternal } from "./queue_internal.entity";
 import { TransactionInfo } from "./transaction_info.entity";
 import { TransactionService } from "./transaction_services.entity";
 
@@ -105,4 +107,7 @@ export class UserInfo extends BaseEntity {
 
     @OneToMany(() => TransactionInfo, (trans) => trans.patient)
     transaction_info: TransactionInfo[];
+
+    @OneToOne(() => QueueInternal, (q) => q.patient)
+    queue_internal: QueueInternal;
 }

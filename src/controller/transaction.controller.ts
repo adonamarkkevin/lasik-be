@@ -315,7 +315,9 @@ export const processTrans = async (req: Request, res: Response) => {
         const clinic = userFound.clinic;
         const transFound = await getTransactionById(parseInt(transId), [
             "patient_class",
+            "patient",
         ]);
+        const patientFound = transFound.patient;
         const queueFound = await Queue.findOne({
             where: {
                 transaction_info: {
@@ -367,6 +369,10 @@ export const processTrans = async (req: Request, res: Response) => {
                         queue_number: internalQnum,
                     }).save();
                     await addServiceQueue(service.id, internalQ.id);
+                    await QueueInternal.createQueryBuilder()
+                        .relation("patient")
+                        .of(internalQ.id)
+                        .set(patientFound.id);
                 }
             }
         }
@@ -377,6 +383,10 @@ export const processTrans = async (req: Request, res: Response) => {
                     queue_number: internalQnum,
                 }).save();
                 await addServiceQueue(serviceObj.id, internalQ.id);
+                await QueueInternal.createQueryBuilder()
+                    .relation("patient")
+                    .of(internalQ.id)
+                    .set(patientFound.id);
             }
         }
 

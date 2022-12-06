@@ -14,6 +14,7 @@ import { queueRoutes } from "./route/queue.routes";
 import { pClassRoutes } from "./route/patient_class.routes";
 import { patientRoutes } from "./route/patient.routes";
 import { adminRoutes } from "./route/admin.routes";
+import { discountRoutes } from "./route/discount.routes";
 
 declare module "express" {
     export interface Request {
@@ -49,6 +50,7 @@ AppDataSource.initialize()
         app.use("/api/v1", pClassRoutes); // patient class routes
         app.use("/api/v1", patientRoutes); // patient routes
         app.use("/api/v1", adminRoutes); // admin routes
+        app.use("/api/v1", discountRoutes); // discount routes
 
         const PORT = process.env.PORT || 3006;
         // run app
