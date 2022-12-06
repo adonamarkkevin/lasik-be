@@ -600,3 +600,36 @@ export const viewInvoiceSummaryPerDate = async (
         });
     }
 };
+
+export const viewAllVoid = async (req: Request, res: Response) => {
+    try {
+        const userFound = req.user;
+        const clinic = userFound.clinic;
+
+        const [allVoid, count] =
+            clinic.id === 1
+                ? await TransactionInfo.find({
+                      where: { deleted_at: Not(IsNull()) },
+                      withDeleted: true,
+                  })
+                : await TransactionInfo.find({
+                      where: {
+                          deleted_at: Not(IsNull()),
+                          clinic: {
+                              id: clinic.id,
+                          },
+                      },
+                      withDeleted: true,
+                  });
+        return res.send({
+            data: allVoid,
+            count: count,
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: `Server Error`,
+            message: `Please contact administrator`,
+            error: error.message,
+        });
+    }
+};

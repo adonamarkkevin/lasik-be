@@ -6,6 +6,7 @@ import {
     updateTransPckg,
     updateTransSrvc,
     viewAllTransaction,
+    viewAllVoid,
     viewBillSummaryPerDate,
     viewInvoiceSummaryPerDate,
     viewTransPkcg,
@@ -74,3 +75,4 @@ transRoutes.post(
     adminCheck,
     viewInvoiceSummaryPerDate,
 );
+transRoutes.get("/transaction/view-void/", checkToken, adminCheck, viewAllVoid);
