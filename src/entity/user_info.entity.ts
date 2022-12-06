@@ -108,6 +108,6 @@ export class UserInfo extends BaseEntity {
     @OneToMany(() => TransactionInfo, (trans) => trans.patient)
     transaction_info: TransactionInfo[];
 
-    @OneToOne(() => QueueInternal, (q) => q.patient)
+    @OneToMany(() => QueueInternal, (q) => q.patient)
     queue_internal: QueueInternal;
 }

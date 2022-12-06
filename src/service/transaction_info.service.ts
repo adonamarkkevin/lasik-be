@@ -182,16 +182,9 @@ export const addPatietClassTransaction = async (
 };
 
 export const addQueueTransaction = async (transId: number, queueId: number) => {
-    if (queueId === 0) {
-        await TransactionInfo.createQueryBuilder()
-            .relation("patient_class")
-            .of(transId)
-            .set(null);
-        return;
-    }
     await TransactionInfo.createQueryBuilder()
         .relation("queue")
         .of(transId)
-        .set(queueId);
+        .add(queueId);
     return;
 };

@@ -11,6 +11,7 @@ import {
     OneToOne,
     JoinColumn,
     ManyToOne,
+    OneToMany,
 } from "typeorm";
 import { Clinic } from "./clinic_branch.entity";
 import { PatientClass } from "./patient_class.entity";
@@ -141,7 +142,7 @@ export class TransactionInfo extends BaseEntity {
     @JoinColumn({ name: "clinic_id" })
     clinic: Clinic;
 
-    @OneToOne(() => Queue, (q) => q.transaction_info)
+    @OneToMany(() => Queue, (q) => q.transaction_info)
     queue: Queue;
 
     @ManyToOne(() => PatientClass, (c) => c.transaction_info)

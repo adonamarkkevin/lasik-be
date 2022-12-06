@@ -8,6 +8,7 @@ import {
     DeleteDateColumn,
     OneToOne,
     JoinColumn,
+    ManyToOne,
 } from "typeorm";
 import { TransactionService } from "./transaction_services.entity";
 import { UserInfo } from "./user_info.entity";
@@ -36,7 +37,7 @@ export class QueueInternal extends BaseEntity {
     @JoinColumn({ name: "service_id" })
     transaction_service: TransactionService;
 
-    @OneToOne(() => UserInfo, (user) => user.queue_internal)
+    @ManyToOne(() => UserInfo, (user) => user.queue_internal)
     @JoinColumn({ name: "patient_id" })
     patient: UserInfo;
 }

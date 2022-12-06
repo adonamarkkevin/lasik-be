@@ -396,6 +396,7 @@ export const processTrans = async (req: Request, res: Response) => {
             data: updatedTrans,
         });
     } catch (error) {
+        console.log(error);
         return res.status(500).send({
             status: `Server Error`,
             message: `Please contact administrator`,
