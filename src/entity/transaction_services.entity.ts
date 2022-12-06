@@ -73,6 +73,6 @@ export class TransactionService extends BaseEntity {
     )
     transaction_package: TransactionPackage[];
 
-    @OneToOne(() => QueueInternal, (q) => q.transaction_service)
+    @ManyToOne(() => QueueInternal, (q) => q.transaction_service)
     queue_internal: QueueInternal;
 }

@@ -8,6 +8,7 @@ import {
     DeleteDateColumn,
     OneToOne,
     JoinColumn,
+    OneToMany,
 } from "typeorm";
 import { TransactionInfo } from "./transaction_info.entity";
 
@@ -31,7 +32,7 @@ export class Queue extends BaseEntity {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @OneToOne(() => TransactionInfo, (trans) => trans.queue)
+    @OneToMany(() => TransactionInfo, (trans) => trans.queue)
     @JoinColumn({ name: "transaction_id" })
     transaction_info: TransactionInfo;
 }
