@@ -298,7 +298,6 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
                               patient_class: {
                                   id: In(transWhere),
                               },
-                              transaction_type: Not(IsNull()),
                           },
                           relations: [
                               "third_party_provider",
