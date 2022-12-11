@@ -79,7 +79,7 @@ export const updateDiscount = async (req: Request, res: Response) => {
 
 export const getAllDiscount = async (req: Request, res: Response) => {
     try {
-        const [allDiscount, count] = await Discount.find();
+        const [allDiscount, count] = await Discount.findAndCount();
 
         return res.send({
             data: allDiscount,
