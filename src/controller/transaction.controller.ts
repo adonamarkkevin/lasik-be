@@ -421,7 +421,10 @@ export const processTrans = async (req: Request, res: Response) => {
                     let internalQ = await QueueInternal.create({
                         queue_number: internalQnum,
                     }).save();
-                    await addServiceQueue(service.id, internalQ.id);
+                    await QueueInternal.createQueryBuilder()
+                        .relation("transaction_service")
+                        .of(internalQ.id)
+                        .set(service.id);
                     await QueueInternal.createQueryBuilder()
                         .relation("patient")
                         .of(internalQ.id)
@@ -435,7 +438,10 @@ export const processTrans = async (req: Request, res: Response) => {
                 let internalQ = await QueueInternal.create({
                     queue_number: internalQnum,
                 }).save();
-                await addServiceQueue(serviceObj.id, internalQ.id);
+                await QueueInternal.createQueryBuilder()
+                    .relation("transaction_service")
+                    .of(internalQ.id)
+                    .set(serviceObj.id);
                 await QueueInternal.createQueryBuilder()
                     .relation("patient")
                     .of(internalQ.id)

@@ -76,9 +76,24 @@ export const deleteUser = async (userInfo: any) => {
 };
 
 export const getUserByKey = async (key: any, value: any) => {
+    const userFound = await UserInfo.findOne({
+        where: { [key]: value },
+    });
+    return userFound;
+};
+
+export const getUserByUserName = async (user_name: string) => {
     const userFound = await UserInfo.createQueryBuilder("user")
         .addSelect("user.password")
-        .where({ [key]: value })
+        .where("user.user_name = :username", { username: user_name })
+        .getOne();
+    return userFound;
+};
+
+export const getUserByEmail = async (email: string) => {
+    const userFound = await UserInfo.createQueryBuilder("user")
+        .addSelect("user.password")
+        .where("user.email = :email", { email: email })
         .getOne();
     return userFound;
 };

@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import {
     createUser,
+    getUserByEmail,
     getUserById,
     getUserByKey,
+    getUserByUserName,
     updateUser,
 } from "../service/user_info.service";
 import * as EmailValidator from "email-validator";
@@ -36,13 +38,13 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
     try {
-        const reqBody = req.body;
+        const { user_access, password } = req.body;
 
-        const userFound = EmailValidator.validate(reqBody.user_access)
-            ? await getUserByKey("email", reqBody.user_access)
-            : await getUserByKey("user_name", reqBody.user_access);
+        const userFound = EmailValidator.validate(user_access)
+            ? await getUserByEmail(user_access)
+            : await getUserByUserName(user_access);
 
-        compare(reqBody.password, userFound.password, (err, data) => {
+        compare(password, userFound.password, (err, data) => {
             if (err) {
                 return res.status(500).send({
                     status: `Server Error`,

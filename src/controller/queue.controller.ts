@@ -149,6 +149,7 @@ export const assignDoctorOnQ = async (req: Request, res: Response) => {
         }
 
         const serviceId = queueFound.transaction_service.id;
+
         await assignDoctor(serviceId, userFound.id);
         queueFound.queue_status = "ON PROCESS";
         await QueueInternal.save(queueFound);
