@@ -11,11 +11,11 @@ COPY ./yarn.lock ./
 RUN yarn install
 
 COPY . .
-COPY dev.env .env
+COPY prod.env .env
 
 RUN yarn build
 
-ENV NODE_ENV development
+ENV NODE_ENV production
 
 EXPOSE 3006
 
