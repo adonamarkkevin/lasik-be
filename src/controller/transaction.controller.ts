@@ -375,6 +375,15 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
                   });
         Promise.all(
             allTrans.map((data) => {
+                data.transaction_service.map((srvcFound) => {
+                    srvcFound.price = srvcFound.price / 100;
+                    srvcFound.facility_fee = srvcFound.facility_fee / 100;
+                    srvcFound.doctor_share = srvcFound.doctor_share / 100;
+                    srvcFound.professional_share =
+                        srvcFound.professional_share / 100;
+                    srvcFound.amount_paid = srvcFound.amount_paid / 100;
+                    srvcFound.discount_amount = srvcFound.discount_amount / 100;
+                });
                 data.transaction_package.map((pckgFound) => {
                     pckgFound.price = pckgFound.price / 100;
                     pckgFound.discount_amount = pckgFound.discount_amount / 100;
@@ -391,16 +400,6 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
                         service.professional_share =
                             service.professional_share / 100;
                         service.amount_paid = service.amount_paid / 100;
-                    });
-                    data.transaction_service.map((srvcFound) => {
-                        srvcFound.price = srvcFound.price / 100;
-                        srvcFound.facility_fee = srvcFound.facility_fee / 100;
-                        srvcFound.doctor_share = srvcFound.doctor_share / 100;
-                        srvcFound.professional_share =
-                            srvcFound.professional_share / 100;
-                        srvcFound.amount_paid = srvcFound.amount_paid / 100;
-                        srvcFound.discount_amount =
-                            srvcFound.discount_amount / 100;
                     });
                 });
             }),
