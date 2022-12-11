@@ -107,8 +107,18 @@ export const viewAllInternalQ = async (req: Request, res: Response) => {
 
 export const clearAllInternalQ = async (req: Request, res: Response) => {
     try {
-        await QueueInternal.clear();
+        const userFound = req.user;
+        const clinic = userFound.clinic;
 
+        const allInternalQueue = await QueueInternal.find({
+            where: { queue_number: Like(`%${clinic.hosp_code}%`) },
+        });
+
+        Promise.all(
+            allInternalQueue.map(
+                async (q) => await QueueInternal.softRemove(q),
+            ),
+        );
         return res.send({
             status: "Success",
             message: "Queue Cleared",
