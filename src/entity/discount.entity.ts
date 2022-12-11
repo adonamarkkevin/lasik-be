@@ -16,6 +16,9 @@ export class Discount extends BaseEntity {
     @Column()
     discount_code: string;
 
+    @Column()
+    discount_name: string;
+
     @Column({ type: "decimal", precision: 11, scale: 2 })
     rate: number;
 

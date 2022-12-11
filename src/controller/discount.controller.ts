@@ -10,7 +10,7 @@ import {
 
 export const createDiscount = async (req: Request, res: Response) => {
     try {
-        const { discount_code, rate, is_percent } = req.body;
+        const { discount_code, rate, is_percent, discount_name } = req.body;
         const discountFound = await getDiscountByKey(
             "discount_code",
             discount_code,
@@ -23,7 +23,12 @@ export const createDiscount = async (req: Request, res: Response) => {
             });
         }
 
-        await insertDiscount({ discount_code, rate, is_percent });
+        await insertDiscount({
+            discount_code,
+            discount_name,
+            rate,
+            is_percent,
+        });
 
         return res.send({
             status: "Success",
@@ -41,7 +46,7 @@ export const createDiscount = async (req: Request, res: Response) => {
 export const updateDiscount = async (req: Request, res: Response) => {
     try {
         const { discountId } = req.params;
-        const { discount_code, rate, is_percent } = req.body;
+        const { discount_code, rate, is_percent, discount_name } = req.body;
         const discountFound = await getDiscountById(parseInt(discountId));
 
         if (!discountFound) {
@@ -53,6 +58,7 @@ export const updateDiscount = async (req: Request, res: Response) => {
 
         const updatedDiscount = await upsertDiscount(discountFound, {
             discount_code,
+            discount_name,
             rate,
             is_percent,
         });

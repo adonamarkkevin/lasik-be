@@ -1,8 +1,14 @@
 import { Discount } from "../entity/discount.entity";
 
-export const insertDiscount = async ({ discount_code, rate, is_percent }) => {
+export const insertDiscount = async ({
+    discount_code,
+    discount_name,
+    rate,
+    is_percent,
+}) => {
     const newDiscount = new Discount();
     newDiscount.discount_code = discount_code;
+    newDiscount.discount_name = discount_name;
     newDiscount.rate = rate;
     newDiscount.is_percent = is_percent;
     await Discount.save(newDiscount);
@@ -11,11 +17,12 @@ export const insertDiscount = async ({ discount_code, rate, is_percent }) => {
 
 export const upsertDiscount = async (
     discountFound: any,
-    { discount_code, rate, is_percent },
+    { discount_code, rate, is_percent, discount_name },
 ) => {
     discountFound.discount_code = discount_code;
     discountFound.rate = rate;
     discountFound.is_percent = is_percent;
+    discountFound.discount_name = discount_name;
     await Discount.save(discountFound);
     return discountFound;
 };
