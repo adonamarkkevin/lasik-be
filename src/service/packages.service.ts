@@ -4,10 +4,10 @@ export const createPackage = async (packBody: any) => {
     const newPackage = new Packcage();
     newPackage.code = packBody.code;
     newPackage.name = packBody.name;
-    newPackage.price = packBody.price;
-    newPackage.facility_fee = packBody.facility_fee;
-    newPackage.doctor_share = packBody.doctor_share;
-    newPackage.professional_share = packBody.professional_share;
+    newPackage.price = packBody.price * 100;
+    newPackage.facility_fee = packBody.facility_fee * 100;
+    newPackage.doctor_share = packBody.doctor_share * 100;
+    newPackage.professional_share = packBody.professional_share * 100;
 
     await Packcage.save(newPackage);
     return newPackage;
@@ -16,10 +16,10 @@ export const createPackage = async (packBody: any) => {
 export const updatePackage = async (packageFound: any, packBody: any) => {
     packageFound.code = packBody.code;
     packageFound.name = packBody.name;
-    packageFound.price = packBody.price;
-    packageFound.facility_fee = packBody.facility_fee;
-    packageFound.doctor_share = packBody.doctor_share;
-    packageFound.professional_share = packBody.professional_share;
+    packageFound.price = packBody.price * 100;
+    packageFound.facility_fee = packBody.facility_fee * 100;
+    packageFound.doctor_share = packBody.doctor_share * 100;
+    packageFound.professional_share = packBody.professional_share * 100;
     packageFound.service = packBody.services;
 
     await Packcage.save(packageFound);

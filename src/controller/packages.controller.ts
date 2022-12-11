@@ -136,6 +136,20 @@ export const getOnePckg = async (req: Request, res: Response) => {
             });
         }
 
+        pckgFound.price = pckgFound.price / 100;
+        pckgFound.facility_fee = pckgFound.facility_fee / 100;
+        pckgFound.professional_share = pckgFound.professional_share / 100;
+        pckgFound.doctor_share = pckgFound.doctor_share / 100;
+
+        Promise.all(
+            pckgFound.service.map((service) => {
+                service.price = service.price / 100;
+                service.facility_fee = service.facility_fee / 100;
+                service.doctor_share = service.doctor_share / 100;
+                service.professional_share = service.professional_share / 100;
+            }),
+        );
+
         return res.send(pckgFound);
     } catch (error) {
         return res.status(500).send({
@@ -151,6 +165,23 @@ export const viewAllPckg = async (req: Request, res: Response) => {
         const [allPckg, count] = await Packcage.findAndCount({
             relations: ["service"],
         });
+
+        Promise.all(
+            allPckg.map((pckgFound) => {
+                pckgFound.price = pckgFound.price / 100;
+                pckgFound.facility_fee = pckgFound.facility_fee / 100;
+                pckgFound.professional_share =
+                    pckgFound.professional_share / 100;
+                pckgFound.doctor_share = pckgFound.doctor_share / 100;
+                pckgFound.service.map((service) => {
+                    service.price = service.price / 100;
+                    service.facility_fee = service.facility_fee / 100;
+                    service.doctor_share = service.doctor_share / 100;
+                    service.professional_share =
+                        service.professional_share / 100;
+                });
+            }),
+        );
 
         return res.send({
             data: allPckg,

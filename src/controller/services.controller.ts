@@ -117,6 +117,11 @@ export const getOneSrvc = async (req: Request, res: Response) => {
             });
         }
 
+        srvcFound.price = srvcFound.price / 100;
+        srvcFound.facility_fee = srvcFound.facility_fee / 100;
+        srvcFound.doctor_share = srvcFound.doctor_share / 100;
+        srvcFound.professional_share = srvcFound.professional_share / 100;
+
         return res.send(srvcFound);
     } catch (error) {
         return res.status(500).send({
@@ -133,6 +138,15 @@ export const viewAllSrvc = async (req: Request, res: Response) => {
             relations: ["department"],
         });
 
+        Promise.all(
+            allSrvc.map((srvcFound) => {
+                srvcFound.price = srvcFound.price / 100;
+                srvcFound.facility_fee = srvcFound.facility_fee / 100;
+                srvcFound.doctor_share = srvcFound.doctor_share / 100;
+                srvcFound.professional_share =
+                    srvcFound.professional_share / 100;
+            }),
+        );
         return res.send({
             data: allSrvc,
             count: count,

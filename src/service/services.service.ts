@@ -4,10 +4,10 @@ export const createService = async (service: any) => {
     const newService = new Service();
     newService.name = service.name;
     newService.code = service.code;
-    newService.price = service.price;
-    newService.facility_fee = service.facility_fee;
-    newService.doctor_share = service.doctor_share;
-    newService.professional_share = service.professional_share;
+    newService.price = service.price * 100;
+    newService.facility_fee = service.facility_fee * 100;
+    newService.doctor_share = service.doctor_share * 100;
+    newService.professional_share = service.professional_share * 100;
 
     await Service.save(newService);
     return newService;
@@ -16,10 +16,10 @@ export const createService = async (service: any) => {
 export const updateService = async (serviceFound: any, service: any) => {
     serviceFound.name = service.name;
     serviceFound.code = service.code;
-    serviceFound.price = service.price;
-    serviceFound.facility_fee = service.facility_fee;
-    serviceFound.doctor_share = service.doctor_share;
-    serviceFound.professional_share = service.professional_share;
+    serviceFound.price = service.price * 100;
+    serviceFound.facility_fee = service.facility_fee * 100;
+    serviceFound.doctor_share = service.doctor_share * 100;
+    serviceFound.professional_share = service.professional_share * 100;
     serviceFound.deparment = service.deparment;
 
     await Service.save(serviceFound);

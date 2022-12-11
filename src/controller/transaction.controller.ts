@@ -119,6 +119,24 @@ export const viewTransPkcg = async (req: Request, res: Response) => {
             });
         }
 
+        pckgFound.price = pckgFound.price / 100;
+        pckgFound.discount_amount = pckgFound.discount_amount / 100;
+        pckgFound.facility_fee = pckgFound.facility_fee / 100;
+        pckgFound.professional_share = pckgFound.professional_share / 100;
+        pckgFound.amount_paid = pckgFound.amount_paid / 100;
+        pckgFound.doctor_share = pckgFound.doctor_share / 100;
+
+        Promise.all(
+            pckgFound.transaction_service.map((service) => {
+                service.price = service.price / 100;
+                service.discount_amount = service.discount_amount / 100;
+                service.facility_fee = service.facility_fee / 100;
+                service.doctor_share = service.doctor_share / 100;
+                service.professional_share = service.professional_share / 100;
+                service.amount_paid = service.amount_paid / 100;
+            }),
+        );
+
         return res.send(pckgFound);
     } catch (error) {
         return res.status(500).send({
@@ -181,6 +199,13 @@ export const viewTransSvc = async (req: Request, res: Response) => {
                 message: "Transaction service does not exist.",
             });
         }
+
+        srvcFound.price = srvcFound.price / 100;
+        srvcFound.facility_fee = srvcFound.facility_fee / 100;
+        srvcFound.doctor_share = srvcFound.doctor_share / 100;
+        srvcFound.professional_share = srvcFound.professional_share / 100;
+        srvcFound.amount_paid = srvcFound.amount_paid / 100;
+        srvcFound.discount_amount = srvcFound.discount_amount / 100;
 
         return res.send(srvcFound);
     } catch (error) {
@@ -348,6 +373,38 @@ export const viewAllTransaction = async (req: Request, res: Response) => {
                       ],
                       order: { created_at: "DESC" },
                   });
+        Promise.all(
+            allTrans.map((data) => {
+                data.transaction_package.map((pckgFound) => {
+                    pckgFound.price = pckgFound.price / 100;
+                    pckgFound.discount_amount = pckgFound.discount_amount / 100;
+                    pckgFound.facility_fee = pckgFound.facility_fee / 100;
+                    pckgFound.professional_share =
+                        pckgFound.professional_share / 100;
+                    pckgFound.amount_paid = pckgFound.amount_paid / 100;
+                    pckgFound.doctor_share = pckgFound.doctor_share / 100;
+                    pckgFound.transaction_service.map((service) => {
+                        service.price = service.price / 100;
+                        service.discount_amount = service.discount_amount / 100;
+                        service.facility_fee = service.facility_fee / 100;
+                        service.doctor_share = service.doctor_share / 100;
+                        service.professional_share =
+                            service.professional_share / 100;
+                        service.amount_paid = service.amount_paid / 100;
+                    });
+                    data.transaction_service.map((srvcFound) => {
+                        srvcFound.price = srvcFound.price / 100;
+                        srvcFound.facility_fee = srvcFound.facility_fee / 100;
+                        srvcFound.doctor_share = srvcFound.doctor_share / 100;
+                        srvcFound.professional_share =
+                            srvcFound.professional_share / 100;
+                        srvcFound.amount_paid = srvcFound.amount_paid / 100;
+                        srvcFound.discount_amount =
+                            srvcFound.discount_amount / 100;
+                    });
+                });
+            }),
+        );
 
         return res.send({
             data: allTrans,
@@ -523,6 +580,38 @@ export const viewBillSummaryPerDate = async (req: Request, res: Response) => {
                       ],
                       order: { created_at: "DESC" },
                   });
+        Promise.all(
+            allBilling.map((data) => {
+                data.transaction_package.map((pckgFound) => {
+                    pckgFound.price = pckgFound.price / 100;
+                    pckgFound.discount_amount = pckgFound.discount_amount / 100;
+                    pckgFound.facility_fee = pckgFound.facility_fee / 100;
+                    pckgFound.professional_share =
+                        pckgFound.professional_share / 100;
+                    pckgFound.amount_paid = pckgFound.amount_paid / 100;
+                    pckgFound.doctor_share = pckgFound.doctor_share / 100;
+                    pckgFound.transaction_service.map((service) => {
+                        service.price = service.price / 100;
+                        service.discount_amount = service.discount_amount / 100;
+                        service.facility_fee = service.facility_fee / 100;
+                        service.doctor_share = service.doctor_share / 100;
+                        service.professional_share =
+                            service.professional_share / 100;
+                        service.amount_paid = service.amount_paid / 100;
+                    });
+                    data.transaction_service.map((srvcFound) => {
+                        srvcFound.price = srvcFound.price / 100;
+                        srvcFound.facility_fee = srvcFound.facility_fee / 100;
+                        srvcFound.doctor_share = srvcFound.doctor_share / 100;
+                        srvcFound.professional_share =
+                            srvcFound.professional_share / 100;
+                        srvcFound.amount_paid = srvcFound.amount_paid / 100;
+                        srvcFound.discount_amount =
+                            srvcFound.discount_amount / 100;
+                    });
+                });
+            }),
+        );
 
         return res.send({
             data: allBilling,
@@ -594,6 +683,39 @@ export const viewInvoiceSummaryPerDate = async (
                       ],
                       order: { created_at: "DESC" },
                   });
+
+        Promise.all(
+            allInvoice.map((data) => {
+                data.transaction_package.map((pckgFound) => {
+                    pckgFound.price = pckgFound.price / 100;
+                    pckgFound.discount_amount = pckgFound.discount_amount / 100;
+                    pckgFound.facility_fee = pckgFound.facility_fee / 100;
+                    pckgFound.professional_share =
+                        pckgFound.professional_share / 100;
+                    pckgFound.amount_paid = pckgFound.amount_paid / 100;
+                    pckgFound.doctor_share = pckgFound.doctor_share / 100;
+                    pckgFound.transaction_service.map((service) => {
+                        service.price = service.price / 100;
+                        service.discount_amount = service.discount_amount / 100;
+                        service.facility_fee = service.facility_fee / 100;
+                        service.doctor_share = service.doctor_share / 100;
+                        service.professional_share =
+                            service.professional_share / 100;
+                        service.amount_paid = service.amount_paid / 100;
+                    });
+                    data.transaction_service.map((srvcFound) => {
+                        srvcFound.price = srvcFound.price / 100;
+                        srvcFound.facility_fee = srvcFound.facility_fee / 100;
+                        srvcFound.doctor_share = srvcFound.doctor_share / 100;
+                        srvcFound.professional_share =
+                            srvcFound.professional_share / 100;
+                        srvcFound.amount_paid = srvcFound.amount_paid / 100;
+                        srvcFound.discount_amount =
+                            srvcFound.discount_amount / 100;
+                    });
+                });
+            }),
+        );
 
         return res.send({
             data: allInvoice,
