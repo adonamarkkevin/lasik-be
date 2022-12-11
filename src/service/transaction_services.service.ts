@@ -20,11 +20,11 @@ export const updateTransactionService = async (
     serviceFound.name = service.name;
     serviceFound.code = service.code;
     serviceFound.price = service.price;
-    serviceFound.doctor_share = service.doctor_share;
-    serviceFound.facility_fee = service.facility_fee;
-    serviceFound.professional_share = service.professional_share;
-    serviceFound.amount_paid = service.amount_paid;
-    serviceFound.discount_amount = service.discount_amount;
+    serviceFound.doctor_share = service.doctor_share * 100;
+    serviceFound.facility_fee = service.facility_fee * 100;
+    serviceFound.professional_share = service.professional_share * 100;
+    serviceFound.amount_paid = service.amount_paid * 100;
+    serviceFound.discount_amount = service.discount_amount * 100;
     await TransactionService.save(serviceFound);
     return serviceFound;
 };
@@ -105,4 +105,3 @@ export const addServiceQueue = async (serviceId: number, queueId: number) => {
         .set(queueId);
     return;
 };
-
