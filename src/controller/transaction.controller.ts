@@ -73,6 +73,8 @@ export const insertTransaction = async (req: Request, res: Response) => {
                     parseInt(pckgId),
                     pckgRelation,
                 );
+
+                pckgFound.service.map((d) => delete d.id);
                 const transPckg = await createTransactionPackage(pckgFound);
                 await addPackageTransaction(transaction, transPckg);
             }
